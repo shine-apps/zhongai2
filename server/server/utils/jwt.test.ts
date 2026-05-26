@@ -1,0 +1,65 @@
+import { describe, it, expect } from 'vitest'
+import { signAccessToken, signRefreshToken, verifyToken } from '~/server/utils/jwt'
+
+describe('JWT Utilities', () => {
+  describe('signAccessToken', () => {
+    it('should sign an access token', async () => {
+      const token = await signAccessToken('user-123', 'admin')
+      expect(token).toBeTruthy()
+      expect(typeof token).toBe('string')
+      expect(token.split('.').length).toBe(3)
+    })
+  })
+
+  describe('signRefreshToken', () => {
+    it('should sign a refresh token', async () => {
+      const token = await signRefreshToken('user-123', 'admin')
+      expect(token).toBeTruthy()
+      expect(typeof token).toBe('string')
+    })
+  })
+
+  describe('verifyToken', () => {
+    it('should verify a valid access token', async () => {
+      const token = await signAccessToken('user-123', 'volunteer')
+      const payload = await verifyToken(token)
+      expect(payload.sub).toBe('user-123')
+      expect(payload.role).toBe('volunteer')
+      expect(payload.type).toBe('access')
+    })
+
+    it('should verify a valid refresh token', async () => {
+      const token = await signRefreshToken('user-456', 'leader')
+      const payload = await verifyToken(token)
+      expect(payload.sub).toBe('user-456')
+      expect(payload.role).toBe('leader')
+      expect(payload.type).toBe('refresh')
+    })
+
+    it('should reject an invalid token', async () => {
+      await expect(verifyToken('invalid-token')).rejects.toThrow()
+    })
+
+    it('should reject a token signed with wrong secret', async () => {
+      const { SignJWT } = await import('jose')
+      const wrongSecret = new TextEncoder().encode('wrong-secret')
+      const token = await new SignJWT({ sub: 'user', role: 'admin', type: 'access' })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setIssuedAt()
+        .setExpirationTime('1h')
+        .sign(wrongSecret)
+      await expect(verifyToken(token)).rejects.toThrow()
+    })
+  })
+
+  describe('token differentiation', () => {
+    it('should differentiate access and refresh tokens by type', async () => {
+      const accessToken = await signAccessToken('user-1', 'admin')
+      const refreshToken = await signRefreshToken('user-1', 'admin')
+      const accessPayload = await verifyToken(accessToken)
+      const refreshPayload = await verifyToken(refreshToken)
+      expect(accessPayload.type).toBe('access')
+      expect(refreshPayload.type).toBe('refresh')
+    })
+  })
+})
