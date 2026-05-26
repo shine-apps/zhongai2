@@ -1,0 +1,82 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": { "navigationBarTitleText": "众爱联盟" }
+    },
+    {
+      "path": "pages/activity/list",
+      "style": { "navigationBarTitleText": "公益活动" }
+    },
+    {
+      "path": "pages/activity/detail",
+      "style": { "navigationBarTitleText": "活动详情" }
+    },
+    {
+      "path": "pages/donation/submit",
+      "style": { "navigationBarTitleText": "提交捐助" }
+    },
+    {
+      "path": "pages/donation/list",
+      "style": { "navigationBarTitleText": "我的捐助" }
+    },
+    {
+      "path": "pages/points/index",
+      "style": { "navigationBarTitleText": "我的积分" }
+    },
+    {
+      "path": "pages/user/index",
+      "style": { "navigationBarTitleText": "个人中心" }
+    },
+    {
+      "path": "pages/user/profile",
+      "style": { "navigationBarTitleText": "个人资料" }
+    },
+    {
+      "path": "pages/user/realname",
+      "style": { "navigationBarTitleText": "实名认证" }
+    },
+    {
+      "path": "pages/login/index",
+      "style": { "navigationBarTitleText": "登录", "navigationStyle": "custom" }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "众爱联盟",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#e54d42",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tab/home.png",
+        "selectedIconPath": "static/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/activity/list",
+        "text": "活动",
+        "iconPath": "static/tab/activity.png",
+        "selectedIconPath": "static/tab/activity-active.png"
+      },
+      {
+        "pagePath": "pages/points/index",
+        "text": "积分",
+        "iconPath": "static/tab/points.png",
+        "selectedIconPath": "static/tab/points-active.png"
+      },
+      {
+        "pagePath": "pages/user/index",
+        "text": "我的",
+        "iconPath": "static/tab/user.png",
+        "selectedIconPath": "static/tab/user-active.png"
+      }
+    ]
+  }
+}

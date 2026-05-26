@@ -1,0 +1,33 @@
+{
+  "name": "zhongai-alliance-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "start": "node .output/server/index.mjs",
+    "test": "vitest",
+    "seed:admin": "node scripts/seed-admin.cjs",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "nuxt": "latest",
+    "drizzle-orm": "latest",
+    "pg": "latest",
+    "jose": "latest",
+    "zod": "latest",
+    "bcryptjs": "latest",
+    "@element-plus/nuxt": "latest"
+  },
+  "devDependencies": {
+    "vitest": "latest",
+    "drizzle-kit": "latest",
+    "@types/pg": "latest",
+    "@types/bcryptjs": "latest",
+    "typescript": "latest"
+  }
+}
