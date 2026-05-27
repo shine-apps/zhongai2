@@ -10,6 +10,8 @@ const quickMenus = [
   { icon: 'check', text: '我的签到', url: '' },
   { icon: 'wallet', text: '我的捐助', url: '/pages/donation/list' },
   { icon: 'certificate', text: '实名认证', url: '/pages/user/realname' },
+  { icon: 'trophy', text: '排行榜', url: '/pages/ranking/index' },
+  { icon: 'shop', text: '爱心集市', url: '/pages/market/index' },
 ]
 
 const menuList = [
