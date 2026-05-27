@@ -71,91 +71,102 @@ import {
 } from '~/server/services/user.service'
 
 describe('calculateHonorLevel', () => {
-  it('should return 0 for 0 points', () => {
+  it('should_return_level_0_when_points_0', () => {
     expect(calculateHonorLevel(0)).toBe(0)
   })
 
-  it('should return 0 for 99 points', () => {
-    expect(calculateHonorLevel(99)).toBe(0)
+  it('should_return_level_0_when_points_below_10', () => {
+    expect(calculateHonorLevel(9)).toBe(0)
   })
 
-  it('should return 1 for 100 points', () => {
-    expect(calculateHonorLevel(100)).toBe(1)
+  it('should_return_level_1_when_points_10', () => {
+    expect(calculateHonorLevel(10)).toBe(1)
   })
 
-  it('should return 1 for 499 points', () => {
-    expect(calculateHonorLevel(499)).toBe(1)
+  it('should_return_level_1_when_points_49', () => {
+    expect(calculateHonorLevel(49)).toBe(1)
   })
 
-  it('should return 2 for 500 points', () => {
-    expect(calculateHonorLevel(500)).toBe(2)
+  it('should_return_level_2_when_points_50', () => {
+    expect(calculateHonorLevel(50)).toBe(2)
   })
 
-  it('should return 2 for 1999 points', () => {
-    expect(calculateHonorLevel(1999)).toBe(2)
+  it('should_return_level_2_when_points_99', () => {
+    expect(calculateHonorLevel(99)).toBe(2)
   })
 
-  it('should return 3 for 2000 points', () => {
-    expect(calculateHonorLevel(2000)).toBe(3)
+  it('should_return_level_3_when_points_100', () => {
+    expect(calculateHonorLevel(100)).toBe(3)
   })
 
-  it('should return 3 for 4999 points', () => {
-    expect(calculateHonorLevel(4999)).toBe(3)
+  it('should_return_level_3_when_points_199', () => {
+    expect(calculateHonorLevel(199)).toBe(3)
   })
 
-  it('should return 4 for 5000 points', () => {
-    expect(calculateHonorLevel(5000)).toBe(4)
+  it('should_return_level_4_when_points_200', () => {
+    expect(calculateHonorLevel(200)).toBe(4)
   })
 
-  it('should return 4 for 10000 points', () => {
+  it('should_return_level_4_when_points_10000', () => {
     expect(calculateHonorLevel(10000)).toBe(4)
   })
 
-  it('should return 0 for negative points', () => {
+  it('should_return_level_0_when_points_negative', () => {
     expect(calculateHonorLevel(-10)).toBe(0)
   })
 })
 
 describe('getHonorLevels', () => {
-  it('should return 5 honor levels', () => {
+  it('should_return_5_honor_levels_when_called', () => {
     const levels = getHonorLevels()
     expect(levels).toHaveLength(5)
   })
 
-  it('should have correct level progression', () => {
+  it('should_have_correct_level_progression_when_called', () => {
     const levels = getHonorLevels()
     expect(levels[0].level).toBe(0)
-    expect(levels[0].name).toBe('普通志愿者')
+    expect(levels[0].name).toBe('新手上路')
     expect(levels[0].minPoints).toBe(0)
+    expect(levels[0].icon).toBe('🌱')
+    expect(levels[0].description).toBe('刚开始公益之旅')
+    expect(levels[1].level).toBe(1)
+    expect(levels[1].name).toBe('铜牌志愿者')
+    expect(levels[1].minPoints).toBe(10)
+    expect(levels[1].icon).toBe('🥉')
+    expect(levels[1].description).toBe('累计获得10积分')
+    expect(levels[2].level).toBe(2)
+    expect(levels[2].name).toBe('银牌志愿者')
+    expect(levels[2].minPoints).toBe(50)
+    expect(levels[2].icon).toBe('🥈')
+    expect(levels[2].description).toBe('累计获得50积分')
+    expect(levels[3].level).toBe(3)
+    expect(levels[3].name).toBe('金牌志愿者')
+    expect(levels[3].minPoints).toBe(100)
+    expect(levels[3].icon).toBe('🥇')
+    expect(levels[3].description).toBe('累计获得100积分')
     expect(levels[4].level).toBe(4)
     expect(levels[4].name).toBe('钻石志愿者')
-    expect(levels[4].minPoints).toBe(5000)
+    expect(levels[4].minPoints).toBe(200)
+    expect(levels[4].icon).toBe('💎')
+    expect(levels[4].description).toBe('累计获得200积分')
   })
 
-  it('should have ascending minPoints', () => {
+  it('should_have_ascending_minPoints_when_called', () => {
     const levels = getHonorLevels()
     for (let i = 1; i < levels.length; i++) {
       expect(levels[i].minPoints).toBeGreaterThan(levels[i - 1].minPoints)
     }
   })
 
-  it('should have correct structure for each level', () => {
+  it('should_have_correct_structure_for_each_level_when_called', () => {
     const levels = getHonorLevels()
     for (const level of levels) {
       expect(level).toHaveProperty('level')
       expect(level).toHaveProperty('name')
       expect(level).toHaveProperty('minPoints')
       expect(level).toHaveProperty('icon')
+      expect(level).toHaveProperty('description')
     }
-  })
-
-  it('should have correct names for all levels', () => {
-    const levels = getHonorLevels()
-    expect(levels[0].name).toBe('普通志愿者')
-    expect(levels[1].name).toBe('铜牌志愿者')
-    expect(levels[2].name).toBe('银牌志愿者')
-    expect(levels[3].name).toBe('金牌志愿者')
-    expect(levels[4].name).toBe('钻石志愿者')
   })
 })
 

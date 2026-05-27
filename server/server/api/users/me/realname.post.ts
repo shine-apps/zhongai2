@@ -4,7 +4,7 @@ import { verifyRealName } from '~/server/services/user.service'
 import { success, createErrorResponse } from '~/server/utils/response'
 
 const realNameSchema = z.object({
-  realName: z.string().min(2).max(50),
+  realName: z.string().min(1).max(50),
   idCardNo: z.string().length(18),
 })
 

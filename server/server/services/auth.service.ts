@@ -36,7 +36,7 @@ async function buildUserInfo(user: any): Promise<UserInfo> {
     idCardEncrypted: user.idCardNo || undefined,
     role: user.role as any,
     status: user.status as any,
-    points: (pa?.activityPointsBalance ?? 0) + (pa?.donationPointsBalance ?? 0),
+    points: pa?.totalPoints ?? 0,
     createdAt: user.createdAt?.toISOString() ?? '',
     updatedAt: user.updatedAt?.toISOString() ?? '',
   }
@@ -84,10 +84,9 @@ export async function login(
 
     await db.insert(pointAccounts).values({
       userId: user.id,
-      activityPointsBalance: 0,
       activityPointsTotal: 0,
-      donationPointsBalance: 0,
       donationPointsTotal: 0,
+      totalPoints: 0,
     })
   }
 
@@ -172,4 +171,8 @@ export async function getCurrentUser(userId: string): Promise<UserInfo> {
   }
 
   return buildUserInfo(result[0])
+}
+
+export async function logout(userId: string): Promise<{ success: boolean; message: string }> {
+  return { success: true, message: '退出成功' }
 }

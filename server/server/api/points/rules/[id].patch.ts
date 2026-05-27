@@ -9,10 +9,11 @@ function requireAdmin(event: any) {
 }
 
 const updateRuleSchema = z.object({
-  pointsPerUnit: z.number().int('Points per unit must be an integer').min(0, 'Points per unit must be non-negative').optional(),
-  unitDesc: z.string().max(50).optional(),
-  minAmount: z.string().optional(),
+  pointsPerUnit: z.number().int('Points per unit must be an integer').positive('Points per unit must be positive').optional(),
   isActive: z.boolean().optional(),
+  unitDesc: z.string().optional(),
+  minAmount: z.number().optional(),
+  maxAmount: z.number().nullable().optional(),
 })
 
 export default defineEventHandler(async (event) => {

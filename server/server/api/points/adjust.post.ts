@@ -9,10 +9,10 @@ function requireAdmin(event: any) {
 }
 
 const adjustPointsSchema = z.object({
-  userId: z.string().uuid('Invalid user ID'),
+  userId: z.string().min(1, 'User ID is required'),
   pointType: z.enum(['activity', 'donation'], { message: 'Invalid point type' }),
-  amount: z.number().int('Amount must be an integer').refine((val) => val !== 0, 'Amount cannot be zero'),
-  description: z.string().min(1, 'Description is required').max(200, 'Description cannot exceed 200 characters'),
+  amount: z.number().int('Amount must be an integer').min(-100, 'Amount must be at least -100').max(100, 'Amount must be at most 100'),
+  description: z.string().min(1, 'Description is required'),
 })
 
 export default defineEventHandler(async (event) => {

@@ -202,8 +202,8 @@ export async function approveDonation(
       await tx
         .update(pointAccounts)
         .set({
-          donationPointsBalance: sql`${pointAccounts.donationPointsBalance} + ${pointsToGrant}`,
           donationPointsTotal: sql`${pointAccounts.donationPointsTotal} + ${pointsToGrant}`,
+          totalPoints: sql`${pointAccounts.totalPoints} + ${pointsToGrant}`,
           updatedAt: new Date(),
         })
         .where(eq(pointAccounts.userId, existing.userId))

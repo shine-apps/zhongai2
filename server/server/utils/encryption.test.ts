@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { encryptIdCard, decryptIdCard, maskIdCard, maskPhone } from '~/server/utils/encryption'
 
 describe('encryptIdCard / decryptIdCard', () => {
-  it('should encrypt and decrypt id card correctly', () => {
+  it('should_encrypt_and_decrypt_correctly_when_valid_id_card', () => {
     const idCard = '110101199003077734'
     const encrypted = encryptIdCard(idCard)
     expect(encrypted).not.toBe(idCard)
@@ -11,19 +11,19 @@ describe('encryptIdCard / decryptIdCard', () => {
     expect(decrypted).toBe(idCard)
   })
 
-  it('should produce different ciphertext for same input (random IV)', () => {
+  it('should_produce_different_ciphertext_when_same_input_encrypted_twice', () => {
     const idCard = '110101199003077734'
     const encrypted1 = encryptIdCard(idCard)
     const encrypted2 = encryptIdCard(idCard)
     expect(encrypted1).not.toBe(encrypted2)
   })
 
-  it('should throw for invalid encrypted format on decrypt', () => {
+  it('should_throw_error_when_invalid_encrypted_format_on_decrypt', () => {
     expect(() => decryptIdCard('invalid')).toThrow('Invalid encrypted data format')
     expect(() => decryptIdCard('a:b')).toThrow('Invalid encrypted data format')
   })
 
-  it('should throw for tampered encrypted data', () => {
+  it('should_throw_error_when_tampered_encrypted_data', () => {
     const idCard = '110101199003077734'
     const encrypted = encryptIdCard(idCard)
     const parts = encrypted.split(':')
@@ -34,29 +34,29 @@ describe('encryptIdCard / decryptIdCard', () => {
 })
 
 describe('maskIdCard', () => {
-  it('should mask middle part of id card', () => {
+  it('should_mask_middle_part_when_id_card_provided', () => {
     expect(maskIdCard('110101199003077734')).toBe('110****7734')
   })
 
-  it('should handle short strings', () => {
+  it('should_handle_short_strings_when_input_is_short', () => {
     expect(maskIdCard('1234567')).toBe('123****')
   })
 
-  it('should handle very short strings', () => {
+  it('should_handle_very_short_strings_when_input_is_very_short', () => {
     expect(maskIdCard('123')).toBe('123****')
   })
 })
 
 describe('maskPhone', () => {
-  it('should mask middle 4 digits of phone', () => {
+  it('should_mask_middle_4_digits_when_phone_provided', () => {
     expect(maskPhone('13812345678')).toBe('138****5678')
   })
 
-  it('should return as-is for non-11-digit phone', () => {
+  it('should_return_as_is_when_phone_not_11_digits', () => {
     expect(maskPhone('123456')).toBe('123456')
   })
 
-  it('should handle empty string', () => {
+  it('should_handle_empty_string_when_input_is_empty', () => {
     expect(maskPhone('')).toBe('')
   })
 })

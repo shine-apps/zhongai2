@@ -9,12 +9,12 @@ function requireAdmin(event: any) {
 }
 
 const createRuleSchema = z.object({
-  ruleType: z.string().min(1, 'Rule type is required').max(30),
+  ruleType: z.string().min(1, 'Rule type is required'),
   pointType: z.enum(['activity', 'donation'], { message: 'Invalid point type' }),
-  pointsPerUnit: z.number().int('Points per unit must be an integer').min(0, 'Points per unit must be non-negative'),
-  unitDesc: z.string().max(50).optional(),
-  minAmount: z.string().optional(),
-  isActive: z.boolean().optional(),
+  pointsPerUnit: z.number().int('Points per unit must be an integer').positive('Points per unit must be positive'),
+  unitDesc: z.string().optional(),
+  minAmount: z.number().default(0).optional(),
+  maxAmount: z.number().nullable().optional(),
 })
 
 export default defineEventHandler(async (event) => {

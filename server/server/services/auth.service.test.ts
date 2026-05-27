@@ -66,7 +66,7 @@ vi.mock('bcryptjs', () => ({
   },
 }))
 
-import { adminLogin, refreshToken, login } from '~/server/services/auth.service'
+import { adminLogin, refreshToken, login, logout } from '~/server/services/auth.service'
 
 describe('adminLogin', () => {
   beforeEach(() => {
@@ -74,13 +74,13 @@ describe('adminLogin', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw for non-existent username', async () => {
+  it('should_throw_error_when_username_not_found', async () => {
     pushResolve([])
 
     await expect(adminLogin('nobody', 'pass')).rejects.toThrow('Invalid username or password')
   })
 
-  it('should throw for user without password hash', async () => {
+  it('should_throw_error_when_password_hash_missing', async () => {
     pushResolve([{
       id: '1',
       username: 'admin',
@@ -91,7 +91,7 @@ describe('adminLogin', () => {
     await expect(adminLogin('admin', 'pass')).rejects.toThrow('Invalid username or password')
   })
 
-  it('should throw for wrong password', async () => {
+  it('should_throw_error_when_password_incorrect', async () => {
     pushResolve([{
       id: '1',
       username: 'admin',
@@ -102,7 +102,7 @@ describe('adminLogin', () => {
     await expect(adminLogin('admin', 'wrong-password')).rejects.toThrow('Invalid username or password')
   })
 
-  it('should return tokens for valid credentials', async () => {
+  it('should_return_tokens_when_valid_credentials', async () => {
     pushResolve([{
       id: 'admin-1',
       username: 'admin',
@@ -118,8 +118,7 @@ describe('adminLogin', () => {
       updatedAt: new Date(),
     }])
     pushResolve([{
-      activityPointsBalance: 100,
-      donationPointsBalance: 50,
+      totalPoints: 150,
     }])
 
     const result = await adminLogin('admin', 'correct-password')
@@ -135,19 +134,19 @@ describe('refreshToken', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw for access token used as refresh', async () => {
+  it('should_throw_error_when_access_token_used_as_refresh', async () => {
     const { verifyToken } = await import('~/server/utils/jwt')
     ;(verifyToken as any).mockResolvedValueOnce({ sub: 'user-1', role: 'admin', type: 'access' })
     await expect(refreshToken('access_user-1_admin')).rejects.toThrow('Invalid token type')
   })
 
-  it('should throw for non-existent user', async () => {
+  it('should_throw_error_when_user_not_found', async () => {
     pushResolve([])
 
     await expect(refreshToken('refresh_deleted_volunteer')).rejects.toThrow('User not found')
   })
 
-  it('should return new tokens for valid refresh token', async () => {
+  it('should_return_new_tokens_when_valid_refresh_token', async () => {
     pushResolve([{
       id: 'user-1',
       role: 'volunteer',
@@ -166,7 +165,7 @@ describe('login', () => {
     resolveQueue.length = 0
   })
 
-  it('should login existing user', async () => {
+  it('should_login_successfully_when_user_exists', async () => {
     pushResolve([{
       id: 'user-1',
       openid: 'openid_test-code',
@@ -182,8 +181,7 @@ describe('login', () => {
     }])
     pushResolve([])
     pushResolve([{
-      activityPointsBalance: 0,
-      donationPointsBalance: 0,
+      totalPoints: 0,
     }])
 
     const result = await login('test-code', 'test-phone-code', 'TestUser', 'http://avatar.jpg')
@@ -192,7 +190,7 @@ describe('login', () => {
     expect(result.userInfo).toBeDefined()
   })
 
-  it('should register new user when openid not found', async () => {
+  it('should_register_new_user_when_openid_not_found', async () => {
     pushResolve([])
     pushResolve([])
     pushResolve([{
@@ -210,13 +208,25 @@ describe('login', () => {
     }])
     pushResolve([])
     pushResolve([{
-      activityPointsBalance: 0,
-      donationPointsBalance: 0,
+      totalPoints: 0,
     }])
 
     const result = await login('new-code', 'phone-code', 'NewUser')
     expect(result.accessToken).toBeDefined()
     expect(result.refreshToken).toBeDefined()
     expect(result.userInfo).toBeDefined()
+  })
+})
+
+describe('logout', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    resolveQueue.length = 0
+  })
+
+  it('should_return_success_when_logout_called', async () => {
+    const result = await logout('user-1')
+    expect(result.success).toBe(true)
+    expect(result.message).toBe('退出成功')
   })
 })

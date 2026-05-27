@@ -4,16 +4,16 @@ import { success, createErrorResponse, ResponseCode } from '~/server/utils/respo
 
 const updateActivitySchema = z.object({
   title: z.string().min(1).max(100).optional(),
-  category: z.enum(['education', 'environment', 'elderly', 'medical', 'poverty', 'other']).optional(),
-  description: z.string().optional().nullable(),
-  coverImage: z.string().max(500).optional().nullable(),
+  category: z.enum(['elder_care', 'education', 'env', 'disaster', 'other']).optional(),
+  description: z.string().max(20000).optional().nullable(),
+  coverImage: z.string().url().optional().nullable(),
   startTime: z.coerce.date().optional(),
   endTime: z.coerce.date().optional(),
   location: z.string().max(200).optional().nullable(),
-  latitude: z.coerce.string().optional().nullable(),
-  longitude: z.coerce.string().optional().nullable(),
-  checkinRadius: z.number().int().min(0).optional(),
-  maxParticipants: z.number().int().positive().optional().nullable(),
+  latitude: z.number().min(-90).max(90).optional().nullable(),
+  longitude: z.number().min(-180).max(180).optional().nullable(),
+  checkinRadius: z.number().int().min(10).max(1000).optional(),
+  maxParticipants: z.number().int().positive().nullable().optional(),
   rewardPoints: z.number().int().min(0).optional(),
 })
 
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
   const parsed = updateActivitySchema.safeParse(body)
   if (!parsed.success) {
-    throw createErrorResponse(422, parsed.error.errors.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
+    throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
   const activity = await updateActivity(id, parsed.data, auth.userId, auth.role)

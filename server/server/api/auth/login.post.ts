@@ -6,8 +6,8 @@ import * as authService from '~/server/services/auth.service'
 const schema = z.object({
   code: z.string().min(1),
   phoneCode: z.string().min(1),
-  nickname: z.string().optional(),
-  avatarUrl: z.string().optional(),
+  nickname: z.string().max(50).optional(),
+  avatarUrl: z.string().url().optional(),
 })
 
 export default defineEventHandler(async (event) => {

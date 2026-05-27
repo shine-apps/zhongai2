@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { success, error, paginated, ResponseCode, createErrorResponse } from '~/server/utils/response'
 
 describe('ResponseCode', () => {
-  it('should have correct code values', () => {
+  it('should_have_correct_code_values_when_checking_response_codes', () => {
     expect(ResponseCode.SUCCESS).toBe(0)
     expect(ResponseCode.BAD_REQUEST).toBe(400)
     expect(ResponseCode.UNAUTHORIZED).toBe(401)
@@ -15,47 +15,47 @@ describe('ResponseCode', () => {
 })
 
 describe('success', () => {
-  it('should return success response with data', () => {
+  it('should_return_success_response_when_data_provided', () => {
     const result = success({ id: 1, name: 'test' })
     expect(result.code).toBe(0)
     expect(result.message).toBe('success')
     expect(result.data).toEqual({ id: 1, name: 'test' })
   })
 
-  it('should return success response with custom message', () => {
+  it('should_return_success_response_when_custom_message_provided', () => {
     const result = success(null, '操作成功')
     expect(result.code).toBe(0)
     expect(result.message).toBe('操作成功')
   })
 
-  it('should return success response with string data', () => {
+  it('should_return_success_response_when_string_data_provided', () => {
     const result = success('hello')
     expect(result.data).toBe('hello')
   })
 })
 
 describe('error', () => {
-  it('should return error response with default code', () => {
+  it('should_return_error_response_when_default_code_used', () => {
     const result = error('Something went wrong')
     expect(result.code).toBe(500)
     expect(result.message).toBe('Something went wrong')
     expect(result.data).toBeNull()
   })
 
-  it('should return error response with custom code', () => {
+  it('should_return_error_response_when_custom_code_provided', () => {
     const result = error('Not found', 404)
     expect(result.code).toBe(404)
     expect(result.message).toBe('Not found')
   })
 
-  it('should return error response with validation code', () => {
+  it('should_return_error_response_when_validation_code_used', () => {
     const result = error('Validation failed', 422)
     expect(result.code).toBe(422)
   })
 })
 
 describe('paginated', () => {
-  it('should return paginated response', () => {
+  it('should_return_paginated_response_when_data_provided', () => {
     const list = [{ id: 1 }, { id: 2 }]
     const result = paginated(list, 100, 1, 10)
     expect(result.code).toBe(0)
@@ -66,33 +66,33 @@ describe('paginated', () => {
     expect(result.data.pagination.totalPages).toBe(10)
   })
 
-  it('should calculate totalPages correctly with remainder', () => {
+  it('should_calculate_total_pages_correctly_when_remainder_exists', () => {
     const result = paginated([], 25, 2, 10)
     expect(result.data.pagination.totalPages).toBe(3)
   })
 
-  it('should handle empty list', () => {
+  it('should_handle_empty_list_when_no_items', () => {
     const result = paginated([], 0, 1, 10)
     expect(result.data.pagination.totalPages).toBe(0)
   })
 
-  it('should handle single page', () => {
+  it('should_handle_single_page_when_one_item', () => {
     const result = paginated([{ id: 1 }], 1, 1, 10)
     expect(result.data.pagination.totalPages).toBe(1)
   })
 
-  it('should use custom message', () => {
+  it('should_use_custom_message_when_provided', () => {
     const result = paginated([], 0, 1, 10, '查询成功')
     expect(result.message).toBe('查询成功')
   })
 })
 
 describe('createErrorResponse', () => {
-  it('should throw error with statusCode and message', () => {
+  it('should_throw_error_when_statusCode_and_message_provided', () => {
     expect(() => createErrorResponse(404, 'Not found')).toThrow()
   })
 
-  it('should throw error with data containing code and message', () => {
+  it('should_throw_error_when_data_contains_code_and_message', () => {
     expect(() => createErrorResponse(400, 'Bad request', 400)).toThrow()
     try {
       createErrorResponse(400, 'Bad request', 400)
@@ -103,7 +103,7 @@ describe('createErrorResponse', () => {
     }
   })
 
-  it('should use statusCode as default code in data', () => {
+  it('should_use_statusCode_as_default_code_when_no_code_provided', () => {
     try {
       createErrorResponse(500, 'Internal error')
       expect.unreachable('Should have thrown')

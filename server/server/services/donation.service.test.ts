@@ -56,7 +56,7 @@ describe('createDonation', () => {
     resolveQueue.length = 0
   })
 
-  it('should create a money donation', async () => {
+  it('should_create_money_donation_when_donation_type_is_money', async () => {
     const mockDonation = {
       id: 'donation-1',
       userId: 'user-1',
@@ -85,7 +85,7 @@ describe('createDonation', () => {
     expect(mockDb.values).toHaveBeenCalled()
   })
 
-  it('should create a material donation', async () => {
+  it('should_create_material_donation_when_donation_type_is_material', async () => {
     const mockDonation = {
       id: 'donation-2',
       userId: 'user-1',
@@ -120,7 +120,7 @@ describe('getDonationById', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when donation not found', async () => {
+  it('should_throw_404_when_donation_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -128,7 +128,7 @@ describe('getDonationById', () => {
     ).rejects.toThrow('捐助记录不存在')
   })
 
-  it('should throw 403 when volunteer tries to access another user donation', async () => {
+  it('should_throw_403_when_volunteer_accesses_other_user_donation', async () => {
     const mockDonation = {
       id: 'donation-1',
       userId: 'other-user',
@@ -142,7 +142,7 @@ describe('getDonationById', () => {
     ).rejects.toThrow('无权查看此捐助记录')
   })
 
-  it('should return donation for owner', async () => {
+  it('should_return_donation_when_owner_requests', async () => {
     const mockDonation = {
       id: 'donation-1',
       userId: 'user-1',
@@ -155,7 +155,7 @@ describe('getDonationById', () => {
     expect(result.id).toBe('donation-1')
   })
 
-  it('should return donation for admin even if not owner', async () => {
+  it('should_return_donation_when_admin_requests_even_if_not_owner', async () => {
     const mockDonation = {
       id: 'donation-1',
       userId: 'other-user',
@@ -168,7 +168,7 @@ describe('getDonationById', () => {
     expect(result.id).toBe('donation-1')
   })
 
-  it('should mask donor phone in result', async () => {
+  it('should_mask_donor_phone_when_returning_result', async () => {
     const mockDonation = {
       id: 'donation-1',
       userId: 'user-1',
@@ -188,7 +188,7 @@ describe('approveDonation', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when donation not found', async () => {
+  it('should_throw_404_when_donation_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -196,7 +196,7 @@ describe('approveDonation', () => {
     ).rejects.toThrow('捐助记录不存在')
   })
 
-  it('should throw 400 when donation is not pending', async () => {
+  it('should_throw_400_when_donation_not_pending', async () => {
     pushResolve([{
       id: 'donation-1',
       status: 'approved',
@@ -208,7 +208,7 @@ describe('approveDonation', () => {
     ).rejects.toThrow('只有待审核的捐助记录才能审核通过')
   })
 
-  it('should approve donation without points', async () => {
+  it('should_approve_donation_when_no_points_granted', async () => {
     pushResolve([{
       id: 'donation-1',
       status: 'pending',
@@ -226,7 +226,7 @@ describe('approveDonation', () => {
     expect(result.status).toBe('approved')
   })
 
-  it('should approve donation with points using transaction', async () => {
+  it('should_approve_donation_with_points_when_using_transaction', async () => {
     pushResolve([{
       id: 'donation-1',
       status: 'pending',
@@ -264,7 +264,7 @@ describe('rejectDonation', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when donation not found', async () => {
+  it('should_throw_404_when_donation_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -272,7 +272,7 @@ describe('rejectDonation', () => {
     ).rejects.toThrow('捐助记录不存在')
   })
 
-  it('should throw 400 when donation is not pending', async () => {
+  it('should_throw_400_when_donation_not_pending', async () => {
     pushResolve([{
       id: 'donation-1',
       status: 'rejected',
@@ -284,7 +284,7 @@ describe('rejectDonation', () => {
     ).rejects.toThrow('只有待审核的捐助记录才能驳回')
   })
 
-  it('should reject donation successfully', async () => {
+  it('should_reject_donation_when_pending', async () => {
     pushResolve([{
       id: 'donation-1',
       status: 'pending',

@@ -13,6 +13,14 @@
       "style": { "navigationBarTitleText": "活动详情" }
     },
     {
+      "path": "pages/activity/register",
+      "style": { "navigationBarTitleText": "活动报名" }
+    },
+    {
+      "path": "pages/activity/create",
+      "style": { "navigationBarTitleText": "创建活动" }
+    },
+    {
       "path": "pages/donation/submit",
       "style": { "navigationBarTitleText": "提交捐助" }
     },
@@ -23,6 +31,10 @@
     {
       "path": "pages/points/index",
       "style": { "navigationBarTitleText": "我的积分" }
+    },
+    {
+      "path": "pages/points/rules",
+      "style": { "navigationBarTitleText": "积分规则" }
     },
     {
       "path": "pages/user/index",

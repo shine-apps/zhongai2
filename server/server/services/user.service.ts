@@ -5,11 +5,11 @@ import { encryptIdCard, decryptIdCard, maskIdCard, maskPhone } from '~/server/ut
 import { createErrorResponse } from '~/server/utils/response'
 
 const HONOR_LEVELS = [
-  { level: 0, name: '普通志愿者', minPoints: 0, icon: '' },
-  { level: 1, name: '铜牌志愿者', minPoints: 100, icon: '🥉' },
-  { level: 2, name: '银牌志愿者', minPoints: 500, icon: '🥈' },
-  { level: 3, name: '金牌志愿者', minPoints: 2000, icon: '🥇' },
-  { level: 4, name: '钻石志愿者', minPoints: 5000, icon: '💎' },
+  { level: 0, name: '新手上路', minPoints: 0, icon: '🌱', description: '刚开始公益之旅' },
+  { level: 1, name: '铜牌志愿者', minPoints: 10, icon: '🥉', description: '累计获得10积分' },
+  { level: 2, name: '银牌志愿者', minPoints: 50, icon: '🥈', description: '累计获得50积分' },
+  { level: 3, name: '金牌志愿者', minPoints: 100, icon: '🥇', description: '累计获得100积分' },
+  { level: 4, name: '钻石志愿者', minPoints: 200, icon: '💎', description: '累计获得200积分' },
 ]
 
 function maskUser(user: any) {
@@ -50,10 +50,9 @@ export async function getCurrentUser(userId: string) {
     ...maskedUser,
     points: pointAccount
       ? {
-          activityPointsBalance: pointAccount.activityPointsBalance,
           activityPointsTotal: pointAccount.activityPointsTotal,
-          donationPointsBalance: pointAccount.donationPointsBalance,
           donationPointsTotal: pointAccount.donationPointsTotal,
+          totalPoints: pointAccount.totalPoints,
         }
       : null,
   }
@@ -203,10 +202,9 @@ export async function adminGetUserById(userId: string) {
     idCardNo: user.idCardNo ? maskIdCard(decryptIdCard(user.idCardNo)) : user.idCardNo,
     points: pointAccount
       ? {
-          activityPointsBalance: pointAccount.activityPointsBalance,
           activityPointsTotal: pointAccount.activityPointsTotal,
-          donationPointsBalance: pointAccount.donationPointsBalance,
           donationPointsTotal: pointAccount.donationPointsTotal,
+          totalPoints: pointAccount.totalPoints,
         }
       : null,
   }
@@ -267,10 +265,10 @@ export function getHonorLevels() {
 }
 
 export function calculateHonorLevel(totalPoints: number): number {
-  if (totalPoints >= 5000) return 4
-  if (totalPoints >= 2000) return 3
-  if (totalPoints >= 500) return 2
-  if (totalPoints >= 100) return 1
+  if (totalPoints >= 200) return 4
+  if (totalPoints >= 100) return 3
+  if (totalPoints >= 50) return 2
+  if (totalPoints >= 10) return 1
   return 0
 }
 

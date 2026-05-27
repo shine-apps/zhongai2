@@ -3,7 +3,7 @@ import { signAccessToken, signRefreshToken, verifyToken } from '~/server/utils/j
 
 describe('JWT Utilities', () => {
   describe('signAccessToken', () => {
-    it('should sign an access token', async () => {
+    it('should_sign_access_token_when_user_id_and_role_provided', async () => {
       const token = await signAccessToken('user-123', 'admin')
       expect(token).toBeTruthy()
       expect(typeof token).toBe('string')
@@ -12,7 +12,7 @@ describe('JWT Utilities', () => {
   })
 
   describe('signRefreshToken', () => {
-    it('should sign a refresh token', async () => {
+    it('should_sign_refresh_token_when_user_id_and_role_provided', async () => {
       const token = await signRefreshToken('user-123', 'admin')
       expect(token).toBeTruthy()
       expect(typeof token).toBe('string')
@@ -20,7 +20,7 @@ describe('JWT Utilities', () => {
   })
 
   describe('verifyToken', () => {
-    it('should verify a valid access token', async () => {
+    it('should_verify_successfully_when_valid_access_token', async () => {
       const token = await signAccessToken('user-123', 'volunteer')
       const payload = await verifyToken(token)
       expect(payload.sub).toBe('user-123')
@@ -28,7 +28,7 @@ describe('JWT Utilities', () => {
       expect(payload.type).toBe('access')
     })
 
-    it('should verify a valid refresh token', async () => {
+    it('should_verify_successfully_when_valid_refresh_token', async () => {
       const token = await signRefreshToken('user-456', 'leader')
       const payload = await verifyToken(token)
       expect(payload.sub).toBe('user-456')
@@ -36,11 +36,11 @@ describe('JWT Utilities', () => {
       expect(payload.type).toBe('refresh')
     })
 
-    it('should reject an invalid token', async () => {
+    it('should_reject_token_when_invalid', async () => {
       await expect(verifyToken('invalid-token')).rejects.toThrow()
     })
 
-    it('should reject a token signed with wrong secret', async () => {
+    it('should_reject_token_when_signed_with_wrong_secret', async () => {
       const { SignJWT } = await import('jose')
       const wrongSecret = new TextEncoder().encode('wrong-secret')
       const token = await new SignJWT({ sub: 'user', role: 'admin', type: 'access' })
@@ -53,7 +53,7 @@ describe('JWT Utilities', () => {
   })
 
   describe('token differentiation', () => {
-    it('should differentiate access and refresh tokens by type', async () => {
+    it('should_differentiate_tokens_when_access_and_refresh_compared', async () => {
       const accessToken = await signAccessToken('user-1', 'admin')
       const refreshToken = await signRefreshToken('user-1', 'admin')
       const accessPayload = await verifyToken(accessToken)

@@ -45,10 +45,10 @@ vi.mock('~/server/utils/pagination', () => ({
 
 vi.mock('~/server/services/user.service', () => ({
   calculateHonorLevel: vi.fn((pts) => {
-    if (pts >= 5000) return 4
-    if (pts >= 2000) return 3
-    if (pts >= 500) return 2
-    if (pts >= 100) return 1
+    if (pts >= 200) return 4
+    if (pts >= 100) return 3
+    if (pts >= 50) return 2
+    if (pts >= 10) return 1
     return 0
   }),
 }))
@@ -61,62 +61,55 @@ describe('getBalance', () => {
     resolveQueue.length = 0
   })
 
-  it('should return zeros when no account exists', async () => {
+  it('should_return_zeros_when_no_account_exists', async () => {
     pushResolve([])
     const result = await getBalance('user-no-account')
     expect(result).toEqual({
-      activityBalance: 0,
       activityTotal: 0,
-      donationBalance: 0,
       donationTotal: 0,
+      totalPoints: 0,
     })
   })
 
-  it('should return balance when account exists', async () => {
+  it('should_return_balance_when_account_exists', async () => {
     pushResolve([{
-      activityPointsBalance: 100,
       activityPointsTotal: 200,
-      donationPointsBalance: 50,
       donationPointsTotal: 80,
+      totalPoints: 280,
     }])
     const result = await getBalance('user-with-account')
     expect(result).toEqual({
-      activityBalance: 100,
       activityTotal: 200,
-      donationBalance: 50,
       donationTotal: 80,
+      totalPoints: 280,
     })
   })
 
-  it('should handle null values in account', async () => {
+  it('should_handle_null_values_when_account_has_nulls', async () => {
     pushResolve([{
-      activityPointsBalance: null,
       activityPointsTotal: null,
-      donationPointsBalance: null,
       donationPointsTotal: null,
+      totalPoints: null,
     }])
     const result = await getBalance('user-null-values')
     expect(result).toEqual({
-      activityBalance: 0,
       activityTotal: 0,
-      donationBalance: 0,
       donationTotal: 0,
+      totalPoints: 0,
     })
   })
 
-  it('should handle partial null values', async () => {
+  it('should_handle_partial_nulls_when_some_values_are_null', async () => {
     pushResolve([{
-      activityPointsBalance: 50,
       activityPointsTotal: null,
-      donationPointsBalance: null,
       donationPointsTotal: 30,
+      totalPoints: 30,
     }])
     const result = await getBalance('user-partial-nulls')
     expect(result).toEqual({
-      activityBalance: 50,
       activityTotal: 0,
-      donationBalance: 0,
       donationTotal: 30,
+      totalPoints: 30,
     })
   })
 })
@@ -127,7 +120,7 @@ describe('getTransactions', () => {
     resolveQueue.length = 0
   })
 
-  it('should return paginated transactions', async () => {
+  it('should_return_paginated_transactions_when_requested', async () => {
     pushResolve([{ value: 1 }])
     pushResolve([{ id: 'tx-1', amount: 10 }])
 
@@ -144,7 +137,7 @@ describe('updateRule', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when rule not found', async () => {
+  it('should_throw_404_when_rule_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -152,7 +145,7 @@ describe('updateRule', () => {
     ).rejects.toThrow('Rule not found')
   })
 
-  it('should update rule when found', async () => {
+  it('should_update_rule_when_found', async () => {
     pushResolve([{ id: 'rule-1', pointsPerUnit: 5 }])
     const mockUpdated = { id: 'rule-1', pointsPerUnit: 10 }
     pushResolve([mockUpdated])
@@ -168,7 +161,7 @@ describe('adjustPoints', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when target user not found', async () => {
+  it('should_throw_404_when_target_user_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -181,7 +174,7 @@ describe('adjustPoints', () => {
     ).rejects.toThrow('User not found')
   })
 
-  it('should adjust points for existing user with account', async () => {
+  it('should_adjust_points_when_user_has_account', async () => {
     pushResolve([{ id: 'user-1' }])
 
     mockDb.transaction.mockImplementationOnce(async (fn) => {
@@ -190,7 +183,6 @@ describe('adjustPoints', () => {
         from: vi.fn().mockReturnThis(),
         where: vi.fn().mockReturnThis(),
         limit: vi.fn().mockResolvedValue([{
-          activityPointsBalance: 100,
           activityPointsTotal: 200,
         }]),
         update: vi.fn().mockReturnThis(),
@@ -206,7 +198,7 @@ describe('adjustPoints', () => {
       await fn(mockTx)
     })
 
-    pushResolve([{ activityPointsTotal: 250, donationPointsTotal: 0 }])
+    pushResolve([{ activityPointsTotal: 250, donationPointsTotal: 0, totalPoints: 250 }])
     pushResolve([{ honorLevel: 0 }])
 
     await adjustPoints('admin-1', {
@@ -219,7 +211,7 @@ describe('adjustPoints', () => {
     expect(mockDb.transaction).toHaveBeenCalled()
   })
 
-  it('should adjust points for user without account (create new)', async () => {
+  it('should_adjust_points_when_user_has_no_account', async () => {
     pushResolve([{ id: 'user-1' }])
 
     mockDb.transaction.mockImplementationOnce(async (fn) => {
@@ -241,7 +233,7 @@ describe('adjustPoints', () => {
       await fn(mockTx)
     })
 
-    pushResolve([{ activityPointsTotal: 100, donationPointsTotal: 0 }])
+    pushResolve([{ activityPointsTotal: 100, donationPointsTotal: 0, totalPoints: 100 }])
     pushResolve([{ honorLevel: 0 }])
 
     await adjustPoints('admin-1', {

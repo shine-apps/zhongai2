@@ -14,18 +14,16 @@ export async function getBalance(userId: string) {
 
   if (!account) {
     return {
-      activityBalance: 0,
       activityTotal: 0,
-      donationBalance: 0,
       donationTotal: 0,
+      totalPoints: 0,
     }
   }
 
   return {
-    activityBalance: account.activityPointsBalance ?? 0,
     activityTotal: account.activityPointsTotal ?? 0,
-    donationBalance: account.donationPointsBalance ?? 0,
     donationTotal: account.donationPointsTotal ?? 0,
+    totalPoints: account.totalPoints ?? 0,
   }
 }
 
@@ -165,20 +163,18 @@ export async function adjustPoints(
     if (!account) {
       await tx.insert(pointAccounts).values({
         userId: data.userId,
-        activityPointsBalance: data.pointType === 'activity' ? data.amount : 0,
         activityPointsTotal: data.pointType === 'activity' && data.amount > 0 ? data.amount : 0,
-        donationPointsBalance: data.pointType === 'donation' ? data.amount : 0,
         donationPointsTotal: data.pointType === 'donation' && data.amount > 0 ? data.amount : 0,
+        totalPoints: data.amount > 0 ? data.amount : 0,
       })
     } else {
       const isActivity = data.pointType === 'activity'
-      const balanceField = isActivity ? pointAccounts.activityPointsBalance : pointAccounts.donationPointsBalance
       const totalField = isActivity ? pointAccounts.activityPointsTotal : pointAccounts.donationPointsTotal
 
       const updateSet: Record<string, any> = { updatedAt: new Date() }
-      updateSet[balanceField.name] = sql`${balanceField} + ${data.amount}`
       if (data.amount > 0) {
         updateSet[totalField.name] = sql`${totalField} + ${data.amount}`
+        updateSet[pointAccounts.totalPoints.name] = sql`${pointAccounts.totalPoints} + ${data.amount}`
       }
 
       await tx
@@ -223,20 +219,18 @@ export async function grantPoints(
     if (!account) {
       await tx.insert(pointAccounts).values({
         userId,
-        activityPointsBalance: data.type === 'activity' ? data.amount : 0,
         activityPointsTotal: data.type === 'activity' && data.amount > 0 ? data.amount : 0,
-        donationPointsBalance: data.type === 'donation' ? data.amount : 0,
         donationPointsTotal: data.type === 'donation' && data.amount > 0 ? data.amount : 0,
+        totalPoints: data.amount > 0 ? data.amount : 0,
       })
     } else {
       const isActivity = data.type === 'activity'
-      const balanceField = isActivity ? pointAccounts.activityPointsBalance : pointAccounts.donationPointsBalance
       const totalField = isActivity ? pointAccounts.activityPointsTotal : pointAccounts.donationPointsTotal
 
       const updateSet: Record<string, any> = { updatedAt: new Date() }
-      updateSet[balanceField.name] = sql`${balanceField} + ${data.amount}`
       if (data.amount > 0) {
         updateSet[totalField.name] = sql`${totalField} + ${data.amount}`
+        updateSet[pointAccounts.totalPoints.name] = sql`${pointAccounts.totalPoints} + ${data.amount}`
       }
 
       await tx
@@ -274,8 +268,8 @@ export async function updateHonorLevel(userId: string) {
 
   if (!account) return
 
-  const totalPoints = (account.activityPointsTotal ?? 0) + (account.donationPointsTotal ?? 0)
-  const newLevel = calculateHonorLevel(totalPoints)
+  const totalPointsValue = account.totalPoints ?? 0
+  const newLevel = calculateHonorLevel(totalPointsValue)
 
   const [user] = await db
     .select({ honorLevel: users.honorLevel })

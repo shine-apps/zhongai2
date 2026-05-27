@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   const parsed = registerSchema.safeParse(body || {})
   if (!parsed.success) {
-    throw createErrorResponse(422, parsed.error.errors.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
+    throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
   const registration = await registerActivity(id, auth.userId, parsed.data.remark)

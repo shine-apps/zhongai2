@@ -39,10 +39,9 @@
             <span>积分账户</span>
           </template>
           <el-descriptions :column="1" border>
-            <el-descriptions-item label="活动积分余额">{{ user.activityPointsBalance }}</el-descriptions-item>
             <el-descriptions-item label="活动积分累计">{{ user.activityPointsTotal }}</el-descriptions-item>
-            <el-descriptions-item label="捐助积分余额">{{ user.donationPointsBalance }}</el-descriptions-item>
             <el-descriptions-item label="捐助积分累计">{{ user.donationPointsTotal }}</el-descriptions-item>
+            <el-descriptions-item label="总积分">{{ user.totalPoints }}</el-descriptions-item>
           </el-descriptions>
         </el-card>
       </el-col>
@@ -86,10 +85,9 @@ const user = reactive({
   status: '',
   honorLevel: '',
   realNameVerified: false,
-  activityPointsBalance: 0,
   activityPointsTotal: 0,
-  donationPointsBalance: 0,
   donationPointsTotal: 0,
+  totalPoints: 0,
 })
 
 const loadUser = async () => {

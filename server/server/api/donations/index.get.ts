@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { getDonationList } from '~/server/services/donation.service'
 import { paginated, createErrorResponse, ResponseCode } from '~/server/utils/response'
 
@@ -7,17 +8,30 @@ function requireAdmin(event: any) {
   }
 }
 
+const querySchema = z.object({
+  page: z.coerce.number().int().positive().optional(),
+  pageSize: z.coerce.number().int().positive().optional(),
+  status: z.enum(['pending', 'approved', 'rejected']).optional(),
+  donationType: z.enum(['money', 'material']).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+})
+
 export default defineEventHandler(async (event) => {
   requireAdmin(event)
 
-  const query = getQuery(event)
+  const parsed = querySchema.safeParse(getQuery(event))
+  if (!parsed.success) {
+    throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
+  }
+
   const result = await getDonationList({
-    page: query.page as string | undefined,
-    pageSize: query.pageSize as string | undefined,
-    status: query.status as string | undefined,
-    donationType: query.donationType as string | undefined,
-    startDate: query.startDate as string | undefined,
-    endDate: query.endDate as string | undefined,
+    page: parsed.data.page?.toString(),
+    pageSize: parsed.data.pageSize?.toString(),
+    status: parsed.data.status,
+    donationType: parsed.data.donationType,
+    startDate: parsed.data.startDate,
+    endDate: parsed.data.endDate,
   })
 
   return paginated(result.list, result.total, result.page, result.pageSize)

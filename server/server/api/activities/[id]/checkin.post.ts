@@ -3,8 +3,10 @@ import { gpsCheckin } from '~/server/services/checkin.service'
 import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
 
 const checkinSchema = z.object({
-  latitude: z.number({ message: '纬度不能为空' }),
-  longitude: z.number({ message: '经度不能为空' }),
+  checkinType: z.enum(['gps', 'qr_code']),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  qrToken: z.string().optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -17,6 +19,7 @@ export default defineEventHandler(async (event) => {
     throw createErrorResponse(422, parsed.error.issues.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
-  const checkin = await gpsCheckin(id, auth.userId, parsed.data.latitude, parsed.data.longitude)
+  const { latitude, longitude } = parsed.data
+  const checkin = await gpsCheckin(id, auth.userId, latitude!, longitude!)
   return success(checkin, '签到成功')
 })

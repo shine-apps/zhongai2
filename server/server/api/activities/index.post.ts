@@ -4,16 +4,16 @@ import { success, createErrorResponse, ResponseCode } from '~/server/utils/respo
 
 const createActivitySchema = z.object({
   title: z.string().min(1, '标题不能为空').max(100, '标题不能超过100个字符'),
-  category: z.enum(['education', 'environment', 'elderly', 'medical', 'poverty', 'other'], { message: '无效的活动类别' }),
-  description: z.string().optional(),
-  coverImage: z.string().max(500).optional(),
+  category: z.enum(['elder_care', 'education', 'env', 'disaster', 'other'], { message: '无效的活动类别' }),
+  description: z.string().max(20000).optional(),
+  coverImage: z.string().url().optional(),
   startTime: z.coerce.date({ message: '无效的开始时间' }),
   endTime: z.coerce.date({ message: '无效的结束时间' }),
   location: z.string().max(200).optional(),
-  latitude: z.coerce.string().optional(),
-  longitude: z.coerce.string().optional(),
-  checkinRadius: z.number().int().min(0).default(200),
-  maxParticipants: z.number().int().positive().optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
+  checkinRadius: z.number().int().min(10).max(1000).default(200),
+  maxParticipants: z.number().int().positive().nullable().optional(),
   rewardPoints: z.number().int().min(0, '积分不能为负数'),
 })
 
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
   const parsed = createActivitySchema.safeParse(body)
   if (!parsed.success) {
-    throw createErrorResponse(422, parsed.error.errors.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
+    throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
   const activity = await createActivity(parsed.data, auth.userId)

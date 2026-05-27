@@ -166,6 +166,40 @@ export async function getCheckinList(activityId: string, query: { page?: number 
   return { list: maskedList, total, page, pageSize }
 }
 
+export async function getMyCheckins(userId: string, query: { page?: number | string; pageSize?: number | string; activityId?: string }) {
+  const { page, pageSize, offset } = parsePaginationQuery(query)
+
+  const conditions = [eq(activityCheckins.userId, userId)]
+  if (query.activityId) {
+    conditions.push(eq(activityCheckins.activityId, query.activityId as string))
+  }
+
+  const [{ value: total }] = await db
+    .select({ value: count() })
+    .from(activityCheckins)
+    .where(and(...conditions))
+
+  const list = await db
+    .select({
+      id: activityCheckins.id,
+      activityId: activityCheckins.activityId,
+      checkinType: activityCheckins.checkinType,
+      checkinTime: activityCheckins.checkinTime,
+      verified: activityCheckins.verified,
+      pointsGranted: activityCheckins.pointsGranted,
+      createdAt: activityCheckins.createdAt,
+      activityTitle: activities.title,
+    })
+    .from(activityCheckins)
+    .leftJoin(activities, eq(activityCheckins.activityId, activities.id))
+    .where(and(...conditions))
+    .orderBy(desc(activityCheckins.checkinTime))
+    .limit(pageSize)
+    .offset(offset)
+
+  return { list, total, page, pageSize }
+}
+
 export async function completeActivity(activityId: string, checkinIds: string[], operatorId: string, operatorRole: string) {
   if (operatorRole !== 'leader' && operatorRole !== 'admin') {
     throw createErrorResponse(403, '需要团长或管理员权限', ResponseCode.FORBIDDEN)
@@ -218,14 +252,14 @@ export async function completeActivity(activityId: string, checkinIds: string[],
         .insert(pointAccounts)
         .values({
           userId: checkin.userId,
-          activityPointsBalance: rewardPoints,
           activityPointsTotal: rewardPoints,
+          totalPoints: rewardPoints,
         })
         .onConflictDoUpdate({
           target: pointAccounts.userId,
           set: {
-            activityPointsBalance: sql`${pointAccounts.activityPointsBalance} + ${rewardPoints}`,
             activityPointsTotal: sql`${pointAccounts.activityPointsTotal} + ${rewardPoints}`,
+            totalPoints: sql`${pointAccounts.totalPoints} + ${rewardPoints}`,
             updatedAt: new Date(),
           },
         })

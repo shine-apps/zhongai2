@@ -62,23 +62,23 @@ import {
 } from '~/server/services/activity.service'
 
 describe('requireLeaderOrAdmin', () => {
-  it('should throw for volunteer role', () => {
+  it('should_throw_error_when_role_is_volunteer', () => {
     const event = { context: { auth: { userId: '1', role: 'volunteer' } } }
     expect(() => requireLeaderOrAdmin(event)).toThrow('需要团长或管理员权限')
   })
 
-  it('should throw for no auth', () => {
+  it('should_throw_error_when_no_auth', () => {
     const event = { context: {} }
     expect(() => requireLeaderOrAdmin(event)).toThrow()
   })
 
-  it('should return auth for leader role', () => {
+  it('should_return_auth_when_role_is_leader', () => {
     const event = { context: { auth: { userId: '1', role: 'leader' } } }
     const result = requireLeaderOrAdmin(event)
     expect(result.role).toBe('leader')
   })
 
-  it('should return auth for admin role', () => {
+  it('should_return_auth_when_role_is_admin', () => {
     const event = { context: { auth: { userId: '1', role: 'admin' } } }
     const result = requireLeaderOrAdmin(event)
     expect(result.role).toBe('admin')
@@ -91,13 +91,13 @@ describe('getActivityById', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when activity not found', async () => {
+  it('should_throw_404_when_activity_not_found', async () => {
     pushResolve([])
 
     await expect(getActivityById('nonexistent')).rejects.toThrow('活动不存在')
   })
 
-  it('should return activity when found', async () => {
+  it('should_return_activity_when_found', async () => {
     const mockActivity = {
       id: 'activity-1',
       title: 'Test Activity',
@@ -118,7 +118,7 @@ describe('createActivity', () => {
     resolveQueue.length = 0
   })
 
-  it('should create activity with draft status', async () => {
+  it('should_create_activity_with_draft_status_when_creating', async () => {
     const mockActivity = {
       id: 'activity-1',
       title: 'New Activity',
@@ -156,7 +156,7 @@ describe('publishActivity', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when activity not found', async () => {
+  it('should_throw_404_when_activity_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -164,7 +164,7 @@ describe('publishActivity', () => {
     ).rejects.toThrow('活动不存在')
   })
 
-  it('should throw 400 when activity is not in draft status', async () => {
+  it('should_throw_400_when_activity_not_in_draft_status', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'published',
@@ -176,7 +176,7 @@ describe('publishActivity', () => {
     ).rejects.toThrow('只有草稿状态的活动才能发布')
   })
 
-  it('should throw 403 when non-admin non-organizer tries to publish', async () => {
+  it('should_throw_403_when_non_admin_non_organizer_tries_to_publish', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'draft',
@@ -188,7 +188,7 @@ describe('publishActivity', () => {
     ).rejects.toThrow('需要活动组织者或管理员权限')
   })
 
-  it('should publish draft activity', async () => {
+  it('should_publish_activity_when_draft', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'draft',
@@ -205,7 +205,7 @@ describe('publishActivity', () => {
     expect(result.status).toBe('published')
   })
 
-  it('should allow admin to publish any activity', async () => {
+  it('should_allow_publish_when_admin_role', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'draft',
@@ -228,7 +228,7 @@ describe('cancelActivity', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when activity not found', async () => {
+  it('should_throw_404_when_activity_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -236,7 +236,7 @@ describe('cancelActivity', () => {
     ).rejects.toThrow('活动不存在')
   })
 
-  it('should throw 400 when activity is already cancelled', async () => {
+  it('should_throw_400_when_activity_already_cancelled', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'cancelled',
@@ -248,7 +248,7 @@ describe('cancelActivity', () => {
     ).rejects.toThrow('活动已取消')
   })
 
-  it('should throw 400 when activity is completed', async () => {
+  it('should_throw_400_when_activity_completed', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'completed',
@@ -260,7 +260,7 @@ describe('cancelActivity', () => {
     ).rejects.toThrow('已完成的活动不能取消')
   })
 
-  it('should cancel published activity', async () => {
+  it('should_cancel_activity_when_published', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'published',
@@ -283,7 +283,7 @@ describe('deleteActivity', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when activity not found', async () => {
+  it('should_throw_404_when_activity_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -291,7 +291,7 @@ describe('deleteActivity', () => {
     ).rejects.toThrow('活动不存在')
   })
 
-  it('should throw 400 when activity is not in draft status', async () => {
+  it('should_throw_400_when_activity_not_in_draft_status', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'published',
@@ -303,7 +303,7 @@ describe('deleteActivity', () => {
     ).rejects.toThrow('只有草稿状态的活动才能删除')
   })
 
-  it('should delete draft activity', async () => {
+  it('should_delete_activity_when_draft', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'draft',
@@ -321,7 +321,7 @@ describe('registerActivity', () => {
     resolveQueue.length = 0
   })
 
-  it('should throw 404 when activity not found', async () => {
+  it('should_throw_404_when_activity_not_found', async () => {
     pushResolve([])
 
     await expect(
@@ -329,7 +329,7 @@ describe('registerActivity', () => {
     ).rejects.toThrow('活动不存在')
   })
 
-  it('should throw 400 when activity is not open for registration', async () => {
+  it('should_throw_400_when_activity_not_open_for_registration', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'draft',
@@ -343,7 +343,7 @@ describe('registerActivity', () => {
     ).rejects.toThrow('活动未开放报名')
   })
 
-  it('should throw 400 when activity is full', async () => {
+  it('should_throw_400_when_activity_full', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'published',
@@ -357,7 +357,7 @@ describe('registerActivity', () => {
     ).rejects.toThrow('活动人数已满')
   })
 
-  it('should throw 400 when organizer tries to register own activity', async () => {
+  it('should_throw_400_when_organizer_registers_own_activity', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'published',
@@ -371,7 +371,7 @@ describe('registerActivity', () => {
     ).rejects.toThrow('组织者不能报名自己的活动')
   })
 
-  it('should throw 409 when already registered', async () => {
+  it('should_throw_409_when_already_registered', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'published',
@@ -389,7 +389,7 @@ describe('registerActivity', () => {
     ).rejects.toThrow('已经报名该活动')
   })
 
-  it('should register successfully for published activity', async () => {
+  it('should_register_successfully_when_activity_published', async () => {
     pushResolve([{
       id: 'activity-1',
       status: 'published',

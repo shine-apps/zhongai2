@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
   const parsed = approveSchema.safeParse(body)
   if (!parsed.success) {
-    throw createErrorResponse(422, parsed.error.errors.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
+    throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
   const donation = await approveDonation(id, event.context.auth.userId, parsed.data)

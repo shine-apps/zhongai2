@@ -3,12 +3,10 @@ import { createDonation } from '~/server/services/donation.service'
 import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
 
 const createDonationSchema = z.object({
-  donationType: z.enum(['money', 'material']),
-  amount: z.number().positive().optional(),
-  materialDesc: z.string().optional(),
-  materialValue: z.number().positive().optional(),
-  evidenceImages: z.array(z.string().url()).min(1).max(5),
-  evidenceDesc: z.string().optional(),
+  type: z.enum(['money', 'goods']),
+  amount: z.number().positive(),
+  description: z.string().optional(),
+  voucherImages: z.array(z.string().url()).min(1).max(5),
 })
 
 export default defineEventHandler(async (event) => {
@@ -21,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
   const parsed = createDonationSchema.safeParse(body)
   if (!parsed.success) {
-    throw createErrorResponse(422, parsed.error.errors.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
+    throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
   const donation = await createDonation(auth.userId, parsed.data)
