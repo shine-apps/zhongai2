@@ -36,7 +36,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         if (avatar && !avatar.startsWith("http")) {
           const uploadRes = await new Promise((resolve, reject) => {
             common_vendor.index.uploadFile({
-              url: `${"http://localhost:3001"}/api/upload`,
+              url: `${"https://api.zhongai.example.com"}/api/upload`,
               filePath: avatar,
               name: "file",
               success(res) {

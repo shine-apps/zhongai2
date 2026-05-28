@@ -81,7 +81,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       try {
         const url = await new Promise((resolve, reject) => {
           common_vendor.index.uploadFile({
-            url: `${"http://localhost:3001"}/api/upload`,
+            url: `${"https://api.zhongai.example.com"}/api/upload`,
             filePath,
             name: "file",
             success(res) {
