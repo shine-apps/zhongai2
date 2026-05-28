@@ -29,6 +29,7 @@
     "@types/pg": "latest",
     "drizzle-kit": "latest",
     "typescript": "latest",
-    "vitest": "latest"
+    "vitest": "latest",
+    "vue-tsc": "^3.3.2"
   }
 }
