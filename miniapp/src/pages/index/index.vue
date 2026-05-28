@@ -61,6 +61,8 @@ function handleGridClick(index: number) {
     '/pages/user/realname',
     '/pages/ranking/index',
     '/pages/market/index',
+    '/pages/honor/index',
+    '/pages/feedback/create',
   ]
   const url = routes[index]
   if (index === 0) {
@@ -105,6 +107,8 @@ onPullDownRefresh(async () => {
         <wd-grid-item icon="certificate" text="实名认证" @click="handleGridClick(3)" />
         <wd-grid-item icon="trophy" text="排行榜" @click="handleGridClick(4)" />
         <wd-grid-item icon="shop" text="爱心集市" @click="handleGridClick(5)" />
+        <wd-grid-item icon="medal" text="荣誉商城" @click="handleGridClick(6)" />
+        <wd-grid-item icon="comment" text="意见反馈" @click="handleGridClick(7)" />
       </wd-grid>
     </view>
 
