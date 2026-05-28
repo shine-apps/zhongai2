@@ -1,6 +1,6 @@
 import { db } from '~/server/db'
 import { feedbacks, users } from '~/server/db/schema'
-import { eq, and, desc, count, sql } from 'drizzle-orm'
+import { eq, and, desc, count, sql, isNotNull } from 'drizzle-orm'
 import { createErrorResponse, ResponseCode } from '~/server/utils/response'
 import { parsePaginationQuery } from '~/server/utils/pagination'
 
@@ -204,8 +204,13 @@ export async function processFeedback(
 export async function resolveFeedback(
   feedbackId: string,
   adminId: string,
-  data: { response: string }
+  data: { response: string },
+  role?: string
 ) {
+  if (role !== 'admin') {
+    throw createErrorResponse(403, '需要管理员权限', ResponseCode.FORBIDDEN)
+  }
+
   const feedback = await findFeedbackOrThrow(feedbackId)
 
   if (feedback.status !== 'processing') {
@@ -229,8 +234,13 @@ export async function resolveFeedback(
 export async function closeFeedback(
   feedbackId: string,
   adminId: string,
-  data: { response: string }
+  data: { response: string },
+  role?: string
 ) {
+  if (role !== 'admin') {
+    throw createErrorResponse(403, '需要管理员权限', ResponseCode.FORBIDDEN)
+  }
+
   const feedback = await findFeedbackOrThrow(feedbackId)
 
   if (feedback.status === 'closed') {
@@ -272,7 +282,10 @@ export async function getFeedbackStats() {
       avgRating: sql<string>`CAST(AVG(${feedbacks.userRating}) AS DECIMAL(10,1))`,
     })
     .from(feedbacks)
-    .where(eq(feedbacks.status, 'resolved'))
+    .where(and(
+      eq(feedbacks.status, 'resolved'),
+      isNotNull(feedbacks.userRating)
+    ))
 
   const byStatus: Record<string, number> = {}
   for (const row of statusStats) {

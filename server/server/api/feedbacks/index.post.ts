@@ -4,9 +4,9 @@ import { success, createErrorResponse, ResponseCode } from '~/server/utils/respo
 
 const createFeedbackSchema = z.object({
   type: z.enum(['suggestion', 'bug', 'complaint', 'question', 'other']),
-  title: z.string().min(1, '标题不能为空').max(100, '标题不能超过100字'),
-  content: z.string().min(1, '内容不能为空'),
-  images: z.array(z.string()).optional(),
+  title: z.string().min(5, '标题长度需在5-100字符之间').max(100, '标题长度需在5-100字符之间'),
+  content: z.string().min(20, '内容长度需在20-2000字符之间').max(2000, '内容长度需在20-2000字符之间'),
+  images: z.array(z.string()).max(5, '最多上传5张图片').optional(),
   contactInfo: z.string().max(100).optional(),
 })
 

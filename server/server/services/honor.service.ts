@@ -23,14 +23,17 @@ const ELECTRONIC_TYPES = ['badge', 'certificate', 'title']
 
 export interface UserStats {
   honorLevel: number
+  totalPoints: number
   activityCount: number
   donationAmount: number
 }
 
+const HONOR_LEVEL_THRESHOLDS = [0, 10, 50, 100, 200]
+
 function getUnlockThreshold(item: any): number {
   switch (item.unlockType) {
     case 'level':
-      return item.unlockLevel ?? item.unlockValue
+      return HONOR_LEVEL_THRESHOLDS[item.unlockLevel ?? item.unlockValue] ?? item.unlockValue
     case 'activity_count':
       return item.unlockActivityCount ?? item.unlockValue
     case 'donation_amount':
@@ -43,7 +46,7 @@ function getUnlockThreshold(item: any): number {
 function getUserProgress(item: any, userStats: UserStats): number {
   switch (item.unlockType) {
     case 'level':
-      return userStats.honorLevel
+      return userStats.totalPoints
     case 'activity_count':
       return userStats.activityCount
     case 'donation_amount':
@@ -61,10 +64,18 @@ export function checkUnlockStatus(item: any, userStats: UserStats): { unlocked: 
 
 function buildItemResponse(item: any, userStats: UserStats, claimedMap: Map<string, string>) {
   const { unlocked } = checkUnlockStatus(item, userStats)
+  const isClaimed = !!claimedMap.get(item.id)
+  const threshold = getUnlockThreshold(item)
+  const progress = getUserProgress(item, userStats)
+  const progressPercent = threshold === 0 ? (unlocked ? 100 : 0) : Math.min(100, Math.floor((progress / threshold) * 100))
+
   return {
     ...item,
-    unlocked,
-    claimed: !!claimedMap.get(item.id),
+    isUnlocked: unlocked,
+    isClaimed,
+    canClaim: unlocked && !isClaimed,
+    userProgress: progress,
+    progressPercent,
   }
 }
 
@@ -88,8 +99,16 @@ export async function getUserStats(userId: string): Promise<UserStats> {
       eq(donations.status, 'approved')
     ))
 
+  const { pointAccounts } = await import('~/server/db/schema')
+  const [accountResult] = await db
+    .select({ totalPoints: pointAccounts.totalPoints })
+    .from(pointAccounts)
+    .where(eq(pointAccounts.userId, userId))
+    .limit(1)
+
   return {
     honorLevel: user?.honorLevel ?? 0,
+    totalPoints: accountResult?.totalPoints ?? 0,
     activityCount: Number(regResult?.count ?? 0),
     donationAmount: parseFloat(donationResult?.total ?? '0'),
   }
@@ -163,8 +182,15 @@ export async function claimHonorItem(userId: string, itemId: string, userStats: 
     throw createErrorResponse(409, '已领取该荣誉物品')
   }
 
-  if (item.stock !== -1 && item.stock <= 0) {
-    throw createErrorResponse(400, '库存不足')
+  if (item.stock !== -1) {
+    const [{ count: claimedCount }] = await db
+      .select({ count: count() })
+      .from(honorRecords)
+      .where(eq(honorRecords.itemId, itemId))
+
+    if (claimedCount >= item.stock) {
+      throw createErrorResponse(400, '库存不足')
+    }
   }
 
   const [{ count: recordCount }] = await db
@@ -205,25 +231,6 @@ export function generateCertificateNo(itemType: string, existingCount: number): 
   const year = new Date().getFullYear()
   const sequence = String(existingCount + 1).padStart(5, '0')
   return `ZA-${abbreviation}-${year}-${sequence}`
-}
-
-export async function getMyHonorRecords(userId: string, query: { page?: number | string; pageSize?: number | string }) {
-  const { page, pageSize, offset } = parsePaginationQuery(query)
-
-  const [{ value: total }] = await db
-    .select({ value: count() })
-    .from(honorRecords)
-    .where(eq(honorRecords.userId, userId))
-
-  const list = await db
-    .select()
-    .from(honorRecords)
-    .where(eq(honorRecords.userId, userId))
-    .orderBy(desc(honorRecords.createdAt))
-    .limit(pageSize)
-    .offset(offset)
-
-  return { list, total, page, pageSize }
 }
 
 export async function createHonorItem(data: {

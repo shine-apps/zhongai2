@@ -409,7 +409,7 @@ describe('resolveFeedback', () => {
       response: '已解决',
     }])
 
-    const result = await resolveFeedback('fb-1', 'admin-1', { response: '已解决' })
+    const result = await resolveFeedback('fb-1', 'admin-1', { response: '已解决' }, 'admin')
     expect(result.status).toBe('resolved')
   })
 
@@ -417,7 +417,7 @@ describe('resolveFeedback', () => {
     pushResolve([])
 
     await expect(
-      resolveFeedback('nonexistent', 'admin-1', { response: '解决' })
+      resolveFeedback('nonexistent', 'admin-1', { response: '解决' }, 'admin')
     ).rejects.toThrow('反馈不存在')
   })
 
@@ -430,8 +430,14 @@ describe('resolveFeedback', () => {
     pushResolve([mockFeedback])
 
     await expect(
-      resolveFeedback('fb-1', 'admin-1', { response: '解决' })
+      resolveFeedback('fb-1', 'admin-1', { response: '解决' }, 'admin')
     ).rejects.toThrow('只有处理中的反馈才能标记为已解决')
+  })
+
+  it('should_throw_403_when_non_admin_tries_to_resolve', async () => {
+    await expect(
+      resolveFeedback('fb-1', 'user-1', { response: '解决' }, 'user')
+    ).rejects.toThrow('需要管理员权限')
   })
 })
 
@@ -454,7 +460,7 @@ describe('closeFeedback', () => {
       response: '已关闭',
     }])
 
-    const result = await closeFeedback('fb-1', 'admin-1', { response: '已关闭' })
+    const result = await closeFeedback('fb-1', 'admin-1', { response: '已关闭' }, 'admin')
     expect(result.status).toBe('closed')
   })
 
@@ -462,7 +468,7 @@ describe('closeFeedback', () => {
     pushResolve([])
 
     await expect(
-      closeFeedback('nonexistent', 'admin-1', { response: '关闭' })
+      closeFeedback('nonexistent', 'admin-1', { response: '关闭' }, 'admin')
     ).rejects.toThrow('反馈不存在')
   })
 
@@ -475,8 +481,14 @@ describe('closeFeedback', () => {
     pushResolve([mockFeedback])
 
     await expect(
-      closeFeedback('fb-1', 'admin-1', { response: '关闭' })
+      closeFeedback('fb-1', 'admin-1', { response: '关闭' }, 'admin')
     ).rejects.toThrow('反馈已关闭')
+  })
+
+  it('should_throw_403_when_non_admin_tries_to_close', async () => {
+    await expect(
+      closeFeedback('fb-1', 'user-1', { response: '关闭' }, 'user')
+    ).rejects.toThrow('需要管理员权限')
   })
 })
 

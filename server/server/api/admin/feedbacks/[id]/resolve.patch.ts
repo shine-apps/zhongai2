@@ -23,6 +23,6 @@ export default defineEventHandler(async (event) => {
     throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
-  const feedback = await resolveFeedback(id, event.context.auth.userId, parsed.data)
+  const feedback = await resolveFeedback(id, event.context.auth.userId, parsed.data, event.context.auth.role)
   return success(feedback, '反馈已解决')
 })

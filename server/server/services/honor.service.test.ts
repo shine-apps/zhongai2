@@ -66,7 +66,7 @@ describe('HonorService', () => {
         unlockValue: 2,
         unlockLevel: 2,
       }
-      const userStats = { honorLevel: 2, activityCount: 0, donationAmount: 0 }
+      const userStats = { honorLevel: 2, totalPoints: 50, activityCount: 0, donationAmount: 0 }
 
       const result = await checkUnlockStatus(item, userStats)
       expect(result.unlocked).toBe(true)
@@ -79,7 +79,7 @@ describe('HonorService', () => {
         unlockValue: 3,
         unlockLevel: 3,
       }
-      const userStats = { honorLevel: 1, activityCount: 0, donationAmount: 0 }
+      const userStats = { honorLevel: 1, totalPoints: 10, activityCount: 0, donationAmount: 0 }
 
       const result = await checkUnlockStatus(item, userStats)
       expect(result.unlocked).toBe(false)
@@ -92,7 +92,7 @@ describe('HonorService', () => {
         unlockValue: 5,
         unlockActivityCount: 5,
       }
-      const userStats = { honorLevel: 0, activityCount: 5, donationAmount: 0 }
+      const userStats = { honorLevel: 0, totalPoints: 0, activityCount: 5, donationAmount: 0 }
 
       const result = await checkUnlockStatus(item, userStats)
       expect(result.unlocked).toBe(true)
@@ -105,7 +105,7 @@ describe('HonorService', () => {
         unlockValue: 5,
         unlockActivityCount: 5,
       }
-      const userStats = { honorLevel: 0, activityCount: 3, donationAmount: 0 }
+      const userStats = { honorLevel: 0, totalPoints: 0, activityCount: 3, donationAmount: 0 }
 
       const result = await checkUnlockStatus(item, userStats)
       expect(result.unlocked).toBe(false)
@@ -118,7 +118,7 @@ describe('HonorService', () => {
         unlockValue: 100,
         unlockDonationAmount: '100.00',
       }
-      const userStats = { honorLevel: 0, activityCount: 0, donationAmount: 150 }
+      const userStats = { honorLevel: 0, totalPoints: 0, activityCount: 0, donationAmount: 150 }
 
       const result = await checkUnlockStatus(item, userStats)
       expect(result.unlocked).toBe(true)
@@ -131,7 +131,7 @@ describe('HonorService', () => {
         unlockValue: 100,
         unlockDonationAmount: '100.00',
       }
-      const userStats = { honorLevel: 0, activityCount: 0, donationAmount: 50 }
+      const userStats = { honorLevel: 0, totalPoints: 0, activityCount: 0, donationAmount: 50 }
 
       const result = await checkUnlockStatus(item, userStats)
       expect(result.unlocked).toBe(false)
@@ -173,12 +173,14 @@ describe('HonorService', () => {
       pushResolve(mockItems)
       pushResolve(mockRecords)
 
-      const result = await getHonorItems('user-1', { honorLevel: 1, activityCount: 5, donationAmount: 0 })
+      const result = await getHonorItems('user-1', { honorLevel: 1, totalPoints: 10, activityCount: 5, donationAmount: 0 })
       expect(result).toHaveLength(2)
-      expect(result[0].unlocked).toBe(true)
-      expect(result[0].claimed).toBe(true)
-      expect(result[1].unlocked).toBe(false)
-      expect(result[1].claimed).toBe(false)
+      expect(result[0].isUnlocked).toBe(true)
+      expect(result[0].isClaimed).toBe(true)
+      expect(result[0].canClaim).toBe(false)
+      expect(result[1].isUnlocked).toBe(false)
+      expect(result[1].isClaimed).toBe(false)
+      expect(result[1].canClaim).toBe(false)
     })
   })
 
@@ -203,16 +205,17 @@ describe('HonorService', () => {
       pushResolve(mockItem)
       pushResolve(mockRecords)
 
-      const result = await getHonorItemById('item-1', 'user-1', { honorLevel: 1, activityCount: 0, donationAmount: 0 })
+      const result = await getHonorItemById('item-1', 'user-1', { honorLevel: 1, totalPoints: 10, activityCount: 0, donationAmount: 0 })
       expect(result.id).toBe('item-1')
-      expect(result.unlocked).toBe(true)
-      expect(result.claimed).toBe(false)
+      expect(result.isUnlocked).toBe(true)
+      expect(result.isClaimed).toBe(false)
+      expect(result.canClaim).toBe(true)
     })
 
     it('should_throw_404_when_item_not_found', async () => {
       pushResolve([])
 
-      await expect(getHonorItemById('nonexistent', 'user-1', { honorLevel: 0, activityCount: 0, donationAmount: 0 }))
+      await expect(getHonorItemById('nonexistent', 'user-1', { honorLevel: 0, totalPoints: 0, activityCount: 0, donationAmount: 0 }))
         .rejects.toThrow()
     })
   })
@@ -232,7 +235,7 @@ describe('HonorService', () => {
         stock: -1,
       }]
       const mockExistingRecord = []
-      const mockCountResult = [{ count: 0 }]
+      const mockTotalCount = [{ count: 0 }]
       const mockInsertedRecord = [{
         id: 'record-1',
         userId: 'user-1',
@@ -245,10 +248,10 @@ describe('HonorService', () => {
 
       pushResolve(mockItem)
       pushResolve(mockExistingRecord)
-      pushResolve(mockCountResult)
+      pushResolve(mockTotalCount)
       pushResolve(mockInsertedRecord)
 
-      const result = await claimHonorItem('user-1', 'item-1', { honorLevel: 1, activityCount: 0, donationAmount: 0 })
+      const result = await claimHonorItem('user-1', 'item-1', { honorLevel: 1, totalPoints: 10, activityCount: 0, donationAmount: 0 })
       expect(result.certificateNo).toMatch(/^ZA-BD-2026-\d{5}$/)
       expect(result.status).toBe('issued')
     })
@@ -269,7 +272,7 @@ describe('HonorService', () => {
 
       pushResolve(mockItem)
 
-      await expect(claimHonorItem('user-1', 'item-1', { honorLevel: 1, activityCount: 0, donationAmount: 0 }))
+      await expect(claimHonorItem('user-1', 'item-1', { honorLevel: 1, totalPoints: 10, activityCount: 0, donationAmount: 0 }))
         .rejects.toThrow()
     })
 
@@ -296,7 +299,7 @@ describe('HonorService', () => {
       pushResolve(mockItem)
       pushResolve(mockExistingRecord)
 
-      await expect(claimHonorItem('user-1', 'item-1', { honorLevel: 1, activityCount: 0, donationAmount: 0 }))
+      await expect(claimHonorItem('user-1', 'item-1', { honorLevel: 1, totalPoints: 10, activityCount: 0, donationAmount: 0 }))
         .rejects.toThrow()
     })
 
@@ -311,14 +314,16 @@ describe('HonorService', () => {
         unlockActivityCount: 0,
         unlockDonationAmount: '0',
         isActive: true,
-        stock: 0,
+        stock: 10,
       }]
       const mockExistingRecord = []
+      const mockClaimedCount = [{ count: 10 }]
 
       pushResolve(mockItem)
       pushResolve(mockExistingRecord)
+      pushResolve(mockClaimedCount)
 
-      await expect(claimHonorItem('user-1', 'item-2', { honorLevel: 1, activityCount: 0, donationAmount: 0 }))
+      await expect(claimHonorItem('user-1', 'item-2', { honorLevel: 1, totalPoints: 10, activityCount: 0, donationAmount: 0 }))
         .rejects.toThrow()
     })
 
@@ -336,7 +341,8 @@ describe('HonorService', () => {
         stock: 10,
       }]
       const mockExistingRecord = []
-      const mockCountResult = [{ count: 0 }]
+      const mockClaimedCount = [{ count: 0 }]
+      const mockTotalCount = [{ count: 0 }]
       const mockInsertedRecord = [{
         id: 'record-3',
         userId: 'user-1',
@@ -349,10 +355,11 @@ describe('HonorService', () => {
 
       pushResolve(mockItem)
       pushResolve(mockExistingRecord)
-      pushResolve(mockCountResult)
+      pushResolve(mockClaimedCount)
+      pushResolve(mockTotalCount)
       pushResolve(mockInsertedRecord)
 
-      const result = await claimHonorItem('user-1', 'item-3', { honorLevel: 1, activityCount: 0, donationAmount: 0 })
+      const result = await claimHonorItem('user-1', 'item-3', { honorLevel: 1, totalPoints: 10, activityCount: 0, donationAmount: 0 })
       expect(result.status).toBe('pending')
       expect(result.certificateNo).toMatch(/^ZA-GT-2026-\d{5}$/)
     })
@@ -371,7 +378,7 @@ describe('HonorService', () => {
         stock: -1,
       }]
       const mockExistingRecord = []
-      const mockCountResult = [{ count: 3 }]
+      const mockTotalCount = [{ count: 3 }]
       const mockInsertedRecord = [{
         id: 'record-4',
         userId: 'user-1',
@@ -384,10 +391,10 @@ describe('HonorService', () => {
 
       pushResolve(mockItem)
       pushResolve(mockExistingRecord)
-      pushResolve(mockCountResult)
+      pushResolve(mockTotalCount)
       pushResolve(mockInsertedRecord)
 
-      const result = await claimHonorItem('user-1', 'item-4', { honorLevel: 0, activityCount: 5, donationAmount: 0 })
+      const result = await claimHonorItem('user-1', 'item-4', { honorLevel: 0, totalPoints: 0, activityCount: 5, donationAmount: 0 })
       expect(result.certificateNo).toMatch(/^ZA-CT-2026-\d{5}$/)
     })
   })
