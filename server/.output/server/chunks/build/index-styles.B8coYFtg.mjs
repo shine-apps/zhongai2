@@ -1,0 +1,8 @@
+const index_vue_vue_type_style_index_0_scoped_7afa62bc_lang = ".activities-page[data-v-7afa62bc]{padding:0}.card-header[data-v-7afa62bc]{display:flex;justify-content:space-between;align-items:flex-start}.search-form[data-v-7afa62bc]{display:flex;flex-wrap:wrap;align-items:center}.table-card[data-v-7afa62bc]{margin-top:16px}.pagination-wrap[data-v-7afa62bc]{display:flex;justify-content:flex-end;margin-top:16px}";
+
+const indexStyles_B8coYFtg = [
+  index_vue_vue_type_style_index_0_scoped_7afa62bc_lang
+];
+
+export { indexStyles_B8coYFtg as default };
+//# sourceMappingURL=index-styles.B8coYFtg.mjs.map

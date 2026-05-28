@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
-import { getCurrentUser } from '~/server/services/user.service'
-import { success, createErrorResponse } from '~/server/utils/response'
+import { getCurrentUser } from '#server/services/user.service'
+import { success, createErrorResponse } from '#server/utils/response'
 
 function requireAuth(event: any) {
   if (!event.context.auth) {

@@ -1,5 +1,5 @@
-import { getDonationById } from '~/server/services/donation.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { getDonationById } from '#server/services/donation.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 export default defineEventHandler(async (event) => {
   const auth = event.context.auth

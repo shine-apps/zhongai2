@@ -1,9 +1,9 @@
-import { db } from '~/server/db'
-import { donations, pointAccounts, pointTransactions, users } from '~/server/db/schema'
+import { db } from '#server/db'
+import { donations, pointAccounts, pointTransactions, users } from '#server/db/schema'
 import { eq, and, desc, count, gte, lte, sql } from 'drizzle-orm'
-import { createErrorResponse, ResponseCode } from '~/server/utils/response'
-import { parsePaginationQuery } from '~/server/utils/pagination'
-import { maskPhone } from '~/server/utils/encryption'
+import { createErrorResponse, ResponseCode } from '#server/utils/response'
+import { parsePaginationQuery } from '#server/utils/pagination'
+import { maskPhone } from '#server/utils/encryption'
 
 export async function createDonation(
   userId: string,

@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { updateRule } from '~/server/services/points.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { updateRule } from '#server/services/points.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 function requireAdmin(event: any) {
   if (!event.context.auth || event.context.auth.role !== 'admin') {

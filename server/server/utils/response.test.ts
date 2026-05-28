@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { success, error, paginated, ResponseCode, createErrorResponse } from '~/server/utils/response'
+import { success, error, paginated, ResponseCode, createErrorResponse } from '#server/utils/response'
 
 describe('ResponseCode', () => {
   it('should have correct code values', () => {

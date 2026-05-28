@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { rejectDonation } from '~/server/services/donation.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { rejectDonation } from '#server/services/donation.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const rejectSchema = z.object({
   reviewRemark: z.string().min(1),

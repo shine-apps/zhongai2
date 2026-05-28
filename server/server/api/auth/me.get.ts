@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
-import { success, createErrorResponse } from '~/server/utils/response'
-import * as authService from '~/server/services/auth.service'
+import { success, createErrorResponse } from '#server/utils/response'
+import * as authService from '#server/services/auth.service'
 
 export default defineEventHandler(async (event) => {
   const auth = event.context.auth

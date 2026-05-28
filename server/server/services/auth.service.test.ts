@@ -24,9 +24,9 @@ function pushResolve(value: any) {
   resolveQueue.push(value)
 }
 
-vi.mock('~/server/db', () => ({ db: mockDb }))
+vi.mock('#server/db', () => ({ db: mockDb }))
 
-vi.mock('~/server/utils/jwt', () => ({
+vi.mock('#server/utils/jwt', () => ({
   signAccessToken: vi.fn((id, role) => Promise.resolve(`access_${id}_${role}`)),
   signRefreshToken: vi.fn((id, role) => Promise.resolve(`refresh_${id}_${role}`)),
   verifyToken: vi.fn((token) => {
@@ -38,7 +38,7 @@ vi.mock('~/server/utils/jwt', () => ({
   }),
 }))
 
-vi.mock('~/server/utils/wechat', () => ({
+vi.mock('#server/utils/wechat', () => ({
   code2Session: vi.fn((code) =>
     Promise.resolve({ openid: `openid_${code}`, session_key: 'sk', unionid: undefined })
   ),
@@ -47,11 +47,11 @@ vi.mock('~/server/utils/wechat', () => ({
   ),
 }))
 
-vi.mock('~/server/utils/encryption', () => ({
+vi.mock('#server/utils/encryption', () => ({
   maskPhone: vi.fn((p) => p.length === 11 ? p.slice(0, 3) + '****' + p.slice(-4) : p),
 }))
 
-vi.mock('~/server/utils/response', () => ({
+vi.mock('#server/utils/response', () => ({
   createErrorResponse: vi.fn((statusCode, message, code) => {
     const err = new Error(message)
     ;(err as any).statusCode = statusCode
@@ -66,7 +66,7 @@ vi.mock('bcryptjs', () => ({
   },
 }))
 
-import { adminLogin, refreshToken, login } from '~/server/services/auth.service'
+import { adminLogin, refreshToken, login } from '#server/services/auth.service'
 
 describe('adminLogin', () => {
   beforeEach(() => {
@@ -136,7 +136,7 @@ describe('refreshToken', () => {
   })
 
   it('should throw for access token used as refresh', async () => {
-    const { verifyToken } = await import('~/server/utils/jwt')
+    const { verifyToken } = await import('#server/utils/jwt')
     ;(verifyToken as any).mockResolvedValueOnce({ sub: 'user-1', role: 'admin', type: 'access' })
     await expect(refreshToken('access_user-1_admin')).rejects.toThrow('Invalid token type')
   })

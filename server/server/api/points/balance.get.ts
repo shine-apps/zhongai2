@@ -1,5 +1,5 @@
-import { getBalance } from '~/server/services/points.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { getBalance } from '#server/services/points.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 export default defineEventHandler(async (event) => {
   const auth = event.context.auth

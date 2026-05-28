@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
-import { updateUser } from '~/server/services/user.service'
-import { success, createErrorResponse } from '~/server/utils/response'
+import { updateUser } from '#server/services/user.service'
+import { success, createErrorResponse } from '#server/utils/response'
 
 const updateSchema = z.object({
   nickname: z.string().min(1).max(50).optional(),

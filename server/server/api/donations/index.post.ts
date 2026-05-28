@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { createDonation } from '~/server/services/donation.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { createDonation } from '#server/services/donation.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const createDonationSchema = z.object({
   donationType: z.enum(['money', 'material']),

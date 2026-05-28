@@ -1,0 +1,8 @@
+const login_vue_vue_type_style_index_0_scoped_e8f27987_lang = ".login-container[data-v-e8f27987]{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2)}.login-card[data-v-e8f27987]{width:420px}.login-header[data-v-e8f27987]{text-align:center}.login-header h2[data-v-e8f27987]{margin:0;color:#303133;font-size:20px}.login-btn[data-v-e8f27987]{width:100%}";
+
+const loginStyles_BYExyvnV = [
+  login_vue_vue_type_style_index_0_scoped_e8f27987_lang
+];
+
+export { loginStyles_BYExyvnV as default };
+//# sourceMappingURL=login-styles.BYExyvnV.mjs.map

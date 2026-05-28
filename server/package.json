@@ -15,19 +15,20 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "nuxt": "latest",
-    "drizzle-orm": "latest",
-    "pg": "latest",
-    "jose": "latest",
-    "zod": "latest",
+    "@element-plus/nuxt": "latest",
     "bcryptjs": "latest",
-    "@element-plus/nuxt": "latest"
+    "drizzle-orm": "latest",
+    "jose": "latest",
+    "nuxt": "latest",
+    "pg": "latest",
+    "vue-tsc": "^3.3.2",
+    "zod": "latest"
   },
   "devDependencies": {
-    "vitest": "latest",
-    "drizzle-kit": "latest",
-    "@types/pg": "latest",
     "@types/bcryptjs": "latest",
-    "typescript": "latest"
+    "@types/pg": "latest",
+    "drizzle-kit": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
   }
 }

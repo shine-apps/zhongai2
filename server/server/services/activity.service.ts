@@ -1,8 +1,8 @@
-import { db } from '~/server/db'
-import { activities, activityRegistrations, users } from '~/server/db/schema'
+import { db } from '#server/db'
+import { activities, activityRegistrations, users } from '#server/db/schema'
 import { eq, and, ilike, desc, sql, count, gte, lte } from 'drizzle-orm'
-import { createErrorResponse, ResponseCode } from '~/server/utils/response'
-import { parsePaginationQuery } from '~/server/utils/pagination'
+import { createErrorResponse, ResponseCode } from '#server/utils/response'
+import { parsePaginationQuery } from '#server/utils/pagination'
 
 export function requireLeaderOrAdmin(event: any) {
   const auth = event.context.auth

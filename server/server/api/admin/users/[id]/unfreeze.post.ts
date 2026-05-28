@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
-import { unfreezeUser } from '~/server/services/user.service'
-import { success, createErrorResponse } from '~/server/utils/response'
+import { unfreezeUser } from '#server/services/user.service'
+import { success, createErrorResponse } from '#server/utils/response'
 
 function requireAdmin(event: any) {
   if (!event.context.auth || event.context.auth.role !== 'admin') {

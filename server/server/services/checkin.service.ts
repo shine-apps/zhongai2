@@ -1,9 +1,9 @@
-import { db } from '~/server/db'
-import { activityCheckins, activities, activityRegistrations, pointAccounts, pointTransactions, users } from '~/server/db/schema'
+import { db } from '#server/db'
+import { activityCheckins, activities, activityRegistrations, pointAccounts, pointTransactions, users } from '#server/db/schema'
 import { eq, and, inArray, desc, count, sql } from 'drizzle-orm'
-import { createErrorResponse, ResponseCode } from '~/server/utils/response'
-import { parsePaginationQuery } from '~/server/utils/pagination'
-import { maskPhone } from '~/server/utils/encryption'
+import { createErrorResponse, ResponseCode } from '#server/utils/response'
+import { parsePaginationQuery } from '#server/utils/pagination'
+import { maskPhone } from '#server/utils/encryption'
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371000

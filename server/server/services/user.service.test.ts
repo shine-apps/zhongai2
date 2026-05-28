@@ -30,18 +30,18 @@ function pushResolve(value: any) {
   resolveQueue.push(value)
 }
 
-vi.mock('~/server/db', () => ({
+vi.mock('#server/db', () => ({
   db: mockDb,
 }))
 
-vi.mock('~/server/utils/encryption', () => ({
+vi.mock('#server/utils/encryption', () => ({
   encryptIdCard: vi.fn((id) => `encrypted_${id}`),
   decryptIdCard: vi.fn((id) => id.replace('encrypted_', '')),
   maskIdCard: vi.fn((id) => id.slice(0, 3) + '****' + id.slice(-4)),
   maskPhone: vi.fn((phone) => phone.slice(0, 3) + '****' + phone.slice(-4)),
 }))
 
-vi.mock('~/server/utils/response', () => ({
+vi.mock('#server/utils/response', () => ({
   createErrorResponse: vi.fn((statusCode, message, code) => {
     const err = new Error(message)
     ;(err as any).statusCode = statusCode
@@ -68,7 +68,7 @@ import {
   verifyRealName,
   freezeUser,
   unfreezeUser,
-} from '~/server/services/user.service'
+} from '#server/services/user.service'
 
 describe('calculateHonorLevel', () => {
   it('should return 0 for 0 points', () => {

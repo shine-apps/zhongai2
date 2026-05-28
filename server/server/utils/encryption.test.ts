@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { encryptIdCard, decryptIdCard, maskIdCard, maskPhone } from '~/server/utils/encryption'
+import { encryptIdCard, decryptIdCard, maskIdCard, maskPhone } from '#server/utils/encryption'
 
 describe('encryptIdCard / decryptIdCard', () => {
   it('should encrypt and decrypt id card correctly', () => {

@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
-import { verifyRealName } from '~/server/services/user.service'
-import { success, createErrorResponse } from '~/server/utils/response'
+import { verifyRealName } from '#server/services/user.service'
+import { success, createErrorResponse } from '#server/utils/response'
 
 const realNameSchema = z.object({
   realName: z.string().min(2).max(50),
