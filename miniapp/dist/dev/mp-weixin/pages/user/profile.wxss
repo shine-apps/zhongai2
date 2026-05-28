@@ -1,0 +1,49 @@
+.profile-page.data-v-f6b4f04d {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.avatar-section.data-v-f6b4f04d {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 28rpx 32rpx;
+}
+.section-label.data-v-f6b4f04d {
+  font-size: 28rpx;
+  color: #333;
+}
+.avatar-right.data-v-f6b4f04d {
+  display: flex;
+  align-items: center;
+}
+.avatar-image.data-v-f6b4f04d {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+}
+.form-section.data-v-f6b4f04d {
+  margin-top: 16rpx;
+  background: #fff;
+  padding: 0 32rpx;
+}
+.form-item.data-v-f6b4f04d {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.form-item.data-v-f6b4f04d:last-child {
+  border-bottom: none;
+}
+.form-label.data-v-f6b4f04d {
+  font-size: 28rpx;
+  color: #333;
+  width: 120rpx;
+  flex-shrink: 0;
+}
+.save-area.data-v-f6b4f04d {
+  margin: 60rpx 32rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+}

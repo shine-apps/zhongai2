@@ -1,0 +1,45 @@
+.donation-list-page.data-v-2202f55e {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.list-content.data-v-2202f55e {
+  padding: 16rpx 24rpx;
+}
+.donation-card.data-v-2202f55e {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx 32rpx;
+  margin-bottom: 16rpx;
+}
+.card-left.data-v-2202f55e {
+  margin-right: 24rpx;
+}
+.type-icon.data-v-2202f55e {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: rgba(229, 77, 66, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-center.data-v-2202f55e {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.card-amount.data-v-2202f55e {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+.card-time.data-v-2202f55e {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+.card-right.data-v-2202f55e {
+  margin-left: 16rpx;
+}

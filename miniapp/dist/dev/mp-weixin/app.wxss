@@ -1,0 +1,114 @@
+/**
+ * 辅助函数
+ */
+/**
+ * SCSS 配置项：命名空间以及BEM
+ */
+/* 转换成字符串 */
+/* 判断是否存在 Modifier */
+/* 判断是否存在伪类 */
+/**
+ * 主题色切换
+ * @params $theme-color 主题色
+ * @params $type 变暗’dark‘ 变亮 'light'
+ * @params $mix-color 自己设置的混色
+ */
+/**
+ * 颜色结果切换， 如果开启线性渐变色 使用渐变色，如果没有开启，那么使用主题色
+ * @params $open-linear 是否开启线性渐变色
+ * @params $deg 渐变色角度
+ * @params $theme-color 当前配色
+ * @params [Array] $set 主题色明暗设置，与 $color-list 数量对应
+ * @params [Array] $color-list 渐变色顺序， $color-list 和 $per-list 数量相同
+ * @params [Array] $per-list 渐变色比例
+ */
+/**
+ * UI规范基础变量
+ */
+/*----------------------------------------- Theme color. start ----------------------------------------*/
+/* 主题颜色 */
+/* 辅助色 */
+/* 文字颜色（默认浅色背景下 */
+/* 暗黑模式 */
+/* 图形颜色 */
+/*----------------------------------------- Theme color. end -------------------------------------------*/
+/*-------------------------------- Theme color application size.  start --------------------------------*/
+/* 文字字号 */
+/* 文字字重 */
+/* 尺寸 */
+/*-------------------------------- Theme color application size.  end --------------------------------*/
+/* component var */
+/* action-sheet */
+/* badge */
+/* button */
+/* cell */
+/* calendar */
+/* checkbox */
+/* collapse */
+/* divider */
+/* drop-menu */
+/* input-number */
+/* input */
+/* textarea */
+/* loadmore */
+/* message-box */
+/* notice-bar */
+/* pagination */
+/* picker */
+/* col-picker */
+/* overlay */
+/* popup */
+/* progress */
+/* radio */
+/* search */
+/* slider */
+/* sort-button */
+/* steps */
+/* switch */
+/* tabs */
+/* tag */
+/* toast */
+/* loading */
+/* tooltip */
+/* popover */
+/* grid-item */
+/* statustip */
+/* card */
+/* upload */
+/* curtain */
+/* notify */
+/* skeleton */
+/* circle */
+/* swiper */
+/* swiper-nav */
+/* segmented */
+/* tabbar */
+/* tabbar-item */
+/* navbar */
+/* navbar-capsule */
+/* table */
+/* sidebar */
+/* sidebar-item */
+/* fab */
+/* count-down */
+/* keyboard */
+/* number-keyboard */
+/* passwod-input */
+/* form-item */
+/* backtop */
+/* index-bar */
+/* text */
+/* video-preview */
+/* img-cropper */
+/* floating-panel */
+/* signature */
+/* tour */
+/* avatar */
+/* avatar-group */
+/* slide-verify */
+page {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 28rpx;
+  color: #333;
+  background-color: #f5f5f5;
+}page{--status-bar-height:25px;--top-window-height:0px;--window-top:0px;--window-bottom:0px;--window-left:0px;--window-right:0px;--window-magin:0px}[data-c-h="true"]{display: none !important;}

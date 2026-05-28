@@ -6,7 +6,7 @@ onLaunch(() => {
 })
 </script>
 
-<style>
+<style lang="scss">
 @import 'wot-design-uni/components/common/abstracts/variable.scss';
 
 page {

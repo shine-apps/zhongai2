@@ -7,6 +7,12 @@ export default defineNuxtConfig({
     app: 'app',
   },
 
+  nitro: {
+    alias: {
+      '~/server': '/workspace/server/server',
+    },
+  },
+
   modules: ['@element-plus/nuxt'],
 
   elementPlus: {
