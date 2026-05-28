@@ -1,7 +1,7 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
 const utils_auth = require("./auth.js");
-const BASE_URL = "https://api.zhongai.example.com";
+const BASE_URL = "http://localhost:3001";
 function showToast(title) {
   common_vendor.index.showToast({
     title,

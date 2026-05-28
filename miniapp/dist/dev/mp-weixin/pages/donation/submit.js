@@ -49,7 +49,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       for (const img of evidenceImages.value) {
         const uploadRes = await new Promise((resolve, reject) => {
           common_vendor.index.uploadFile({
-            url: `${"https://api.zhongai.example.com"}/api/upload`,
+            url: `${"http://localhost:3001"}/api/upload`,
             filePath: img,
             name: "file",
             success(res) {
