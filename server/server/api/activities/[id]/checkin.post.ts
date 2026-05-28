@@ -2,12 +2,17 @@ import { z } from 'zod'
 import { gpsCheckin } from '~/server/services/checkin.service'
 import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
 
-const checkinSchema = z.object({
-  checkinType: z.enum(['gps', 'qr_code']),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
-  qrToken: z.string().optional(),
-})
+const checkinSchema = z.discriminatedUnion('checkinType', [
+  z.object({
+    checkinType: z.literal('gps'),
+    latitude: z.number().min(-90).max(90, '纬度范围 -90~90'),
+    longitude: z.number().min(-180).max(180, '经度范围 -180~180'),
+  }),
+  z.object({
+    checkinType: z.literal('qr_code'),
+    qrToken: z.string().min(1, '二维码令牌不能为空'),
+  }),
+])
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')!
@@ -19,7 +24,11 @@ export default defineEventHandler(async (event) => {
     throw createErrorResponse(422, parsed.error.issues.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
-  const { latitude, longitude } = parsed.data
-  const checkin = await gpsCheckin(id, auth.userId, latitude!, longitude!)
-  return success(checkin, '签到成功')
+  const data = parsed.data
+  if (data.checkinType === 'gps') {
+    const checkin = await gpsCheckin(id, auth.userId, data.latitude, data.longitude)
+    return success(checkin, '签到成功')
+  }
+
+  throw createErrorResponse(501, '二维码签到暂未实现', ResponseCode.BAD_REQUEST)
 })

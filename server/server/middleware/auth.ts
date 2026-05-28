@@ -1,7 +1,7 @@
 import { defineEventHandler, getRequestHeader, createError } from 'h3'
 import { verifyToken } from '../utils/jwt'
 
-const PUBLIC_PATHS = ['/api/auth/login', '/api/auth/admin-login', '/api/auth/refresh']
+const PUBLIC_PATHS = ['/api/auth/login', '/api/auth/admin-login', '/api/auth/refresh', '/api/stats/public']
 
 export default defineEventHandler(async (event) => {
   const path = event.path
