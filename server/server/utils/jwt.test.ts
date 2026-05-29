@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { signAccessToken, signRefreshToken, verifyToken } from '~/server/utils/jwt'
+import { signAccessToken, signRefreshToken, verifyToken } from '#server/utils/jwt'
 
 describe('JWT Utilities', () => {
   describe('signAccessToken', () => {

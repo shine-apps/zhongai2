@@ -1,5 +1,5 @@
-import { getMyDonations } from '~/server/services/donation.service'
-import { paginated, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { getMyDonations } from '#server/services/donation.service'
+import { paginated, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 export default defineEventHandler(async (event) => {
   const auth = event.context.auth

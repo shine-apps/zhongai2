@@ -27,9 +27,9 @@ function pushResolve(value: any) {
   resolveQueue.push(value)
 }
 
-vi.mock('~/server/db', () => ({ db: mockDb }))
+vi.mock('#server/db', () => ({ db: mockDb }))
 
-vi.mock('~/server/utils/response', () => ({
+vi.mock('#server/utils/response', () => ({
   createErrorResponse: vi.fn((statusCode, message, code) => {
     const err = new Error(message)
     ;(err as any).statusCode = statusCode
@@ -39,11 +39,11 @@ vi.mock('~/server/utils/response', () => ({
   ResponseCode: { NOT_FOUND: 404, BAD_REQUEST: 400 },
 }))
 
-vi.mock('~/server/utils/pagination', () => ({
+vi.mock('#server/utils/pagination', () => ({
   parsePaginationQuery: vi.fn((q) => ({ page: 1, pageSize: 10, offset: 0 })),
 }))
 
-vi.mock('~/server/services/user.service', () => ({
+vi.mock('#server/services/user.service', () => ({
   calculateHonorLevel: vi.fn((pts) => {
     if (pts >= 5000) return 4
     if (pts >= 2000) return 3
@@ -53,7 +53,7 @@ vi.mock('~/server/services/user.service', () => ({
   }),
 }))
 
-import { getBalance, getTransactions, updateRule, adjustPoints } from '~/server/services/points.service'
+import { getBalance, getTransactions, updateRule, adjustPoints } from '#server/services/points.service'
 
 describe('getBalance', () => {
   beforeEach(() => {

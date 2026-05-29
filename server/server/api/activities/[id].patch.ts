@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { updateActivity, requireOrganizerOrAdmin } from '~/server/services/activity.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { updateActivity, requireOrganizerOrAdmin } from '#server/services/activity.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const updateActivitySchema = z.object({
   title: z.string().min(1).max(100).optional(),

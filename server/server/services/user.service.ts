@@ -1,8 +1,8 @@
 import { eq, and, like, or, desc, sql, count } from 'drizzle-orm'
-import { db } from '~/server/db'
-import { users, pointAccounts } from '~/server/db/schema'
-import { encryptIdCard, decryptIdCard, maskIdCard, maskPhone } from '~/server/utils/encryption'
-import { createErrorResponse } from '~/server/utils/response'
+import { db } from '#server/db'
+import { users, pointAccounts } from '#server/db/schema'
+import { encryptIdCard, decryptIdCard, maskIdCard, maskPhone } from '#server/utils/encryption'
+import { createErrorResponse } from '#server/utils/response'
 
 const HONOR_LEVELS = [
   { level: 0, name: '普通志愿者', minPoints: 0, icon: '' },

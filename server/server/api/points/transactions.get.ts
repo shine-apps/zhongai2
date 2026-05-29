@@ -1,5 +1,5 @@
-import { getTransactions } from '~/server/services/points.service'
-import { paginated, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { getTransactions } from '#server/services/points.service'
+import { paginated, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 export default defineEventHandler(async (event) => {
   const auth = event.context.auth

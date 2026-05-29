@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { verifyCheckin } from '~/server/services/checkin.service'
-import { requireLeaderOrAdmin } from '~/server/services/activity.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { verifyCheckin } from '#server/services/checkin.service'
+import { requireLeaderOrAdmin } from '#server/services/activity.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const verifySchema = z.object({
   checkinId: z.string().uuid('签到ID格式不正确'),

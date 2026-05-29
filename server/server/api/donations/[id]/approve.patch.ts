@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { approveDonation } from '~/server/services/donation.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { approveDonation } from '#server/services/donation.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const approveSchema = z.object({
   pointsToGrant: z.number().int().min(0).optional(),

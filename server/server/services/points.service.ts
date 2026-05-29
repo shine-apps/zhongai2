@@ -1,9 +1,9 @@
 import { eq, and, desc, sql, count } from 'drizzle-orm'
-import { db } from '~/server/db'
-import { pointAccounts, pointTransactions, pointRules, users } from '~/server/db/schema'
-import { createErrorResponse, ResponseCode } from '~/server/utils/response'
-import { parsePaginationQuery } from '~/server/utils/pagination'
-import { calculateHonorLevel } from '~/server/services/user.service'
+import { db } from '#server/db'
+import { pointAccounts, pointTransactions, pointRules, users } from '#server/db/schema'
+import { createErrorResponse, ResponseCode } from '#server/utils/response'
+import { parsePaginationQuery } from '#server/utils/pagination'
+import { calculateHonorLevel } from '#server/services/user.service'
 
 export async function getBalance(userId: string) {
   const [account] = await db

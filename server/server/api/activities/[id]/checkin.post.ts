@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { gpsCheckin } from '~/server/services/checkin.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { gpsCheckin } from '#server/services/checkin.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const checkinSchema = z.object({
   latitude: z.number({ message: '纬度不能为空' }),

@@ -29,9 +29,9 @@ function pushResolve(value: any) {
   resolveQueue.push(value)
 }
 
-vi.mock('~/server/db', () => ({ db: mockDb }))
+vi.mock('#server/db', () => ({ db: mockDb }))
 
-vi.mock('~/server/utils/response', () => ({
+vi.mock('#server/utils/response', () => ({
   createErrorResponse: vi.fn((statusCode, message, code) => {
     const err = new Error(message)
     ;(err as any).statusCode = statusCode
@@ -47,7 +47,7 @@ vi.mock('~/server/utils/response', () => ({
   },
 }))
 
-vi.mock('~/server/utils/pagination', () => ({
+vi.mock('#server/utils/pagination', () => ({
   parsePaginationQuery: vi.fn((q) => ({ page: 1, pageSize: 10, offset: 0 })),
 }))
 
@@ -59,7 +59,7 @@ import {
   cancelActivity,
   deleteActivity,
   registerActivity,
-} from '~/server/services/activity.service'
+} from '#server/services/activity.service'
 
 describe('requireLeaderOrAdmin', () => {
   it('should throw for volunteer role', () => {

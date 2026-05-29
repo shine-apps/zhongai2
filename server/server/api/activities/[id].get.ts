@@ -1,5 +1,5 @@
-import { getActivityById } from '~/server/services/activity.service'
-import { success } from '~/server/utils/response'
+import { getActivityById } from '#server/services/activity.service'
+import { success } from '#server/utils/response'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')!

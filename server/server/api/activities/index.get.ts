@@ -1,5 +1,5 @@
-import { getActivityList } from '~/server/services/activity.service'
-import { paginated } from '~/server/utils/response'
+import { getActivityList } from '#server/services/activity.service'
+import { paginated } from '#server/utils/response'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)

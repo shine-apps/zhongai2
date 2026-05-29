@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
-import { adminUpdateUser } from '~/server/services/user.service'
-import { success, createErrorResponse } from '~/server/utils/response'
+import { adminUpdateUser } from '#server/services/user.service'
+import { success, createErrorResponse } from '#server/utils/response'
 
 const adminUpdateSchema = z.object({
   role: z.enum(['admin', 'volunteer', 'user']).optional(),

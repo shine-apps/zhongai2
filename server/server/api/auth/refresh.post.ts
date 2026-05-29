@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
-import { success, createErrorResponse } from '~/server/utils/response'
-import * as authService from '~/server/services/auth.service'
+import { success, createErrorResponse } from '#server/utils/response'
+import * as authService from '#server/services/auth.service'
 
 const schema = z.object({
   refreshToken: z.string().min(1),

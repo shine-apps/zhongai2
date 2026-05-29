@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { registerActivity } from '~/server/services/activity.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { registerActivity } from '#server/services/activity.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const registerSchema = z.object({
   remark: z.string().max(200, '备注不能超过200个字符').optional(),

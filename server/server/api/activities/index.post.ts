@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { createActivity, requireLeaderOrAdmin } from '~/server/services/activity.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { createActivity, requireLeaderOrAdmin } from '#server/services/activity.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const createActivitySchema = z.object({
   title: z.string().min(1, '标题不能为空').max(100, '标题不能超过100个字符'),

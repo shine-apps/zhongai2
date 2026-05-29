@@ -1,5 +1,5 @@
-import { getDonationList } from '~/server/services/donation.service'
-import { paginated, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { getDonationList } from '#server/services/donation.service'
+import { paginated, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 function requireAdmin(event: any) {
   if (!event.context.auth || event.context.auth.role !== 'admin') {

@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { completeActivity } from '~/server/services/checkin.service'
-import { requireLeaderOrAdmin } from '~/server/services/activity.service'
-import { success, createErrorResponse, ResponseCode } from '~/server/utils/response'
+import { completeActivity } from '#server/services/checkin.service'
+import { requireLeaderOrAdmin } from '#server/services/activity.service'
+import { success, createErrorResponse, ResponseCode } from '#server/utils/response'
 
 const completeSchema = z.object({
   checkinIds: z.array(z.string().uuid('签到ID格式不正确')).min(1, '请选择至少一条签到记录'),

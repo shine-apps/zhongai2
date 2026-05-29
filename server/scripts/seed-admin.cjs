@@ -15,13 +15,13 @@ async function seedAdmin() {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const result = await client.query(
-      `INSERT INTO users (username, password_hash, role, nickname)
-       VALUES ($1, $2, 'admin', '系统管理员')
+      `INSERT INTO users (openid, username, password_hash, role, nickname)
+       VALUES ($1, $2, $3, 'admin', '系统管理员')
        ON CONFLICT (username) DO UPDATE SET
          password_hash = EXCLUDED.password_hash,
          nickname = EXCLUDED.nickname
        RETURNING id, username, role, nickname`,
-      [username, hashedPassword]
+      ['admin-openid', username, hashedPassword]
     )
 
     console.log('Admin user seeded successfully:', result.rows[0])

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parsePaginationQuery } from '~/server/utils/pagination'
+import { parsePaginationQuery } from '#server/utils/pagination'
 
 describe('parsePaginationQuery', () => {
   it('should return defaults for empty query', () => {

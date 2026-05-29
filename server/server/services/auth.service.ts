@@ -1,12 +1,12 @@
-import { db } from '~/server/db'
-import { users, pointAccounts } from '~/server/db/schema'
+import { db } from '#server/db'
+import { users, pointAccounts } from '#server/db/schema'
 import { eq, and, sql } from 'drizzle-orm'
-import { signAccessToken, signRefreshToken, verifyToken } from '~/server/utils/jwt'
-import { code2Session, getPhoneNumber } from '~/server/utils/wechat'
-import { maskPhone } from '~/server/utils/encryption'
-import { createErrorResponse } from '~/server/utils/response'
+import { signAccessToken, signRefreshToken, verifyToken } from '#server/utils/jwt'
+import { code2Session, getPhoneNumber } from '#server/utils/wechat'
+import { maskPhone } from '#server/utils/encryption'
+import { createErrorResponse } from '#server/utils/response'
 import bcrypt from 'bcryptjs'
-import type { LoginResponse, UserInfo } from '~/server/types'
+import type { LoginResponse, UserInfo } from '#server/types'
 
 function generateMemberNo(): string {
   const num = Math.floor(10000 + Math.random() * 90000)
