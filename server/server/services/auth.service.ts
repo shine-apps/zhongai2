@@ -98,6 +98,35 @@ export async function login(
   return { accessToken, refreshToken, userInfo }
 }
 
+export async function loginWithPassword(username: string, password: string): Promise<LoginResponse> {
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1)
+
+  if (result.length === 0) {
+    throw createErrorResponse(401, '用户名或密码错误')
+  }
+
+  const user = result[0]!
+
+  if (!user.passwordHash) {
+    throw createErrorResponse(401, '用户名或密码错误')
+  }
+
+  const valid = await bcrypt.compare(password, user.passwordHash)
+  if (!valid) {
+    throw createErrorResponse(401, '用户名或密码错误')
+  }
+
+  if (user.status !== 'active') {
+    throw createErrorResponse(403, '账号已被禁用，请联系管理员')
+  }
+
+  const accessToken = await signAccessToken(user.id, user.role ?? 'volunteer')
+  const refreshToken = await signRefreshToken(user.id, user.role ?? 'volunteer')
+  const userInfo = await buildUserInfo(user)
+
+  return { accessToken, refreshToken, userInfo }
+}
+
 export async function adminLogin(username: string, password: string): Promise<LoginResponse> {
   const result = await db.select().from(users).where(
     and(eq(users.username, username), sql`${users.role} IN ('admin', 'leader')`)

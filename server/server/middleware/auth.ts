@@ -1,7 +1,7 @@
 import { defineEventHandler, getRequestHeader, getMethod, createError } from 'h3'
 import { verifyToken } from '../utils/jwt'
 
-const PUBLIC_PATHS = ['/api/auth/login', '/api/auth/admin-login', '/api/auth/refresh']
+const PUBLIC_PATHS = ['/api/auth/login', '/api/auth/admin-login', '/api/auth/password-login', '/api/auth/refresh']
 
 // These paths allow unauthenticated GET requests (public read access)
 const PUBLIC_GET_PREFIXES = ['/api/activities', '/api/banners']
