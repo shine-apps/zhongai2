@@ -4,7 +4,7 @@ import { onLoad, onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app'
 import { get } from '@/utils/request'
 
 interface Activity {
-  id: number
+  id: string
   title: string
   coverImage: string
   startTime: string
@@ -66,14 +66,14 @@ async function fetchActivities(reset = false) {
     if (keyword.value) {
       params.keyword = keyword.value
     }
-    const data = await get<{ list: Activity[]; total: number }>('/api/activities', params)
+    const data = await get<{ list: Activity[]; pagination: { total: number; page: number; pageSize: number; totalPages: number } }>('/api/activities', params)
     if (reset) {
       activities.value = data.list
     } else {
       activities.value.push(...data.list)
     }
-    total.value = data.total
-    if (activities.value.length >= data.total) {
+    total.value = data.pagination.total
+    if (activities.value.length >= data.pagination.total) {
       finished.value = true
     }
   } catch {
@@ -88,7 +88,7 @@ function onTabChange({ index }: { index: number }) {
   fetchActivities(true)
 }
 
-function goDetail(id: number) {
+function goDetail(id: string) {
   uni.navigateTo({ url: `/pages/activity/detail?activityId=${id}` })
 }
 

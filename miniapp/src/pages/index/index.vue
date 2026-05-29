@@ -5,14 +5,14 @@ import { get } from '@/utils/request'
 import { isLoggedIn } from '@/utils/auth'
 
 interface Banner {
-  id: number
+  id: string
   image: string
   title: string
   link: string
 }
 
 interface Activity {
-  id: number
+  id: string
   title: string
   coverImage: string
   startTime: string
@@ -39,8 +39,8 @@ async function fetchBanners() {
 async function fetchActivities() {
   loading.value = true
   try {
-    const data = await get<Activity[]>('/api/activities', { pageSize: 4, status: 'published' })
-    activities.value = data
+    const data = await get<{ list: Activity[]; pagination: { total: number } }>('/api/activities', { pageSize: 4, status: 'published' })
+    activities.value = data.list
   } catch {
     activities.value = []
   } finally {
@@ -70,7 +70,7 @@ function handleGridClick(index: number) {
   }
 }
 
-function goDetail(id: number) {
+function goDetail(id: string) {
   uni.navigateTo({ url: `/pages/activity/detail?activityId=${id}` })
 }
 

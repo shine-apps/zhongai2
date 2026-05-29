@@ -5,14 +5,14 @@ import { get, post } from '@/utils/request'
 import { isLoggedIn } from '@/utils/auth'
 
 interface Activity {
-  id: number
+  id: string
   title: string
   coverImage: string
   category: string
   startTime: string
   endTime: string
   location: string
-  organizer: string
+  organizerName: string
   description: string
   currentParticipants: number
   maxParticipants: number
@@ -21,7 +21,7 @@ interface Activity {
   isRegistered: boolean
 }
 
-const activityId = ref(0)
+const activityId = ref('')
 const activity = ref<Activity | null>(null)
 const loading = ref(true)
 const registering = ref(false)
@@ -101,7 +101,7 @@ async function handleRegister() {
 
 onLoad((query) => {
   if (query?.activityId) {
-    activityId.value = Number(query.activityId)
+    activityId.value = String(query.activityId)
     fetchDetail()
   }
 })
@@ -129,7 +129,7 @@ onLoad((query) => {
       </view>
       <view class="info-row">
         <wd-icon name="user" size="28rpx" color="#999" />
-        <text class="info-text">{{ activity.organizer }}</text>
+        <text class="info-text">{{ activity.organizerName }}</text>
       </view>
     </view>
 

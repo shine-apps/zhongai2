@@ -2,7 +2,7 @@ const { Client } = require('pg')
 const bcrypt = require('bcryptjs')
 
 async function seedAdmin() {
-  const databaseUrl = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/zhongai_alliance'
+  const databaseUrl = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/zhongai'
 
   const client = new Client({ connectionString: databaseUrl })
 
