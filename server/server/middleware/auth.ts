@@ -1,7 +1,10 @@
-import { defineEventHandler, getRequestHeader, createError } from 'h3'
+import { defineEventHandler, getRequestHeader, getMethod, createError } from 'h3'
 import { verifyToken } from '../utils/jwt'
 
 const PUBLIC_PATHS = ['/api/auth/login', '/api/auth/admin-login', '/api/auth/refresh']
+
+// These paths allow unauthenticated GET requests (public read access)
+const PUBLIC_GET_PREFIXES = ['/api/activities', '/api/banners']
 
 export default defineEventHandler(async (event) => {
   const path = event.path
@@ -10,11 +13,16 @@ export default defineEventHandler(async (event) => {
     return
   }
 
+  if (event.method === 'OPTIONS') {
+    return
+  }
+
   if (PUBLIC_PATHS.some((p) => path === p)) {
     return
   }
 
-  if (event.method === 'OPTIONS') {
+  // Allow public GET access for listed prefixes
+  if (getMethod(event) === 'GET' && PUBLIC_GET_PREFIXES.some((p) => path.startsWith(p))) {
     return
   }
 
