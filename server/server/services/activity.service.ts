@@ -1,6 +1,6 @@
 import { db } from '#server/db'
 import { activities, activityRegistrations, users } from '#server/db/schema'
-import { eq, and, ilike, desc, sql, count, gte, lte } from 'drizzle-orm'
+import { eq, ne, and, ilike, desc, sql, count, gte, lte } from 'drizzle-orm'
 import { createErrorResponse, ResponseCode } from '#server/utils/response'
 import { parsePaginationQuery } from '#server/utils/pagination'
 
@@ -93,7 +93,7 @@ export async function getActivityList(query: {
   return { list, total, page, pageSize }
 }
 
-export async function getActivityById(activityId: string) {
+export async function getActivityById(activityId: string, currentUserId?: string) {
   const [activity] = await db
     .select({
       id: activities.id,
@@ -127,7 +127,21 @@ export async function getActivityById(activityId: string) {
     throw createErrorResponse(404, '活动不存在', ResponseCode.NOT_FOUND)
   }
 
-  return activity
+  let isRegistered = false
+  if (currentUserId) {
+    const [reg] = await db
+      .select({ id: activityRegistrations.id })
+      .from(activityRegistrations)
+      .where(and(
+        eq(activityRegistrations.activityId, activityId),
+        eq(activityRegistrations.userId, currentUserId),
+        ne(activityRegistrations.status, 'cancelled'),
+      ))
+      .limit(1)
+    isRegistered = !!reg
+  }
+
+  return { ...activity, isRegistered }
 }
 
 export async function createActivity(data: any, organizerId: string) {

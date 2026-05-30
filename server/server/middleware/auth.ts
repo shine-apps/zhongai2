@@ -21,8 +21,19 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // Allow public GET access for listed prefixes
+  // Allow public GET access for listed prefixes, but still parse token if present
   if (getMethod(event) === 'GET' && PUBLIC_GET_PREFIXES.some((p) => path.startsWith(p))) {
+    const authHeader = getRequestHeader(event, 'authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const payload = await verifyToken(authHeader.slice(7))
+        if (payload.type === 'access') {
+          event.context.auth = { userId: payload.sub, role: payload.role }
+        }
+      } catch {
+        // Ignore invalid tokens for public paths — unauthenticated access is allowed
+      }
+    }
     return
   }
 

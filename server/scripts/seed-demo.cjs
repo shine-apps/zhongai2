@@ -1,4 +1,5 @@
 const { Client } = require('pg')
+const bcrypt = require('bcryptjs')
 
 async function seedDemoData() {
   const databaseUrl = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/zhongai'
@@ -115,16 +116,18 @@ async function seedDemoData() {
     ]
 
     const userIds = {}
+    // Pre-hash a shared password for all volunteer demo accounts: zhangsan/123456, lisi/123456, etc.
+    const volPasswordHash = await bcrypt.hash('123456', 10)
     for (const u of userData) {
       const r = await client.query(
-        `INSERT INTO users (openid, phone, nickname, real_name, id_card_no, real_name_verified, member_no, role, honor_level, status)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'active')
-         ON CONFLICT (openid) DO UPDATE SET nickname=EXCLUDED.nickname, member_no=EXCLUDED.member_no, honor_level=EXCLUDED.honor_level
+        `INSERT INTO users (openid, phone, nickname, real_name, id_card_no, real_name_verified, member_no, role, honor_level, status, username, password_hash)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'active',$10,$11)
+         ON CONFLICT (openid) DO UPDATE SET nickname=EXCLUDED.nickname, member_no=EXCLUDED.member_no, honor_level=EXCLUDED.honor_level, username=EXCLUDED.username, password_hash=EXCLUDED.password_hash
          RETURNING id, nickname`,
-        [u.openid, u.phone, u.nickname, u.real_name, u.id_card_no, u.real_name_verified, u.member_no, u.role, u.honor_level]
+        [u.openid, u.phone, u.nickname, u.real_name, u.id_card_no, u.real_name_verified, u.member_no, u.role, u.honor_level, u.openid, volPasswordHash]
       )
       userIds[u.openid] = r.rows[0].id
-      console.log('  user:', r.rows[0].nickname, '-', r.rows[0].id)
+      console.log('  user:', r.rows[0].nickname, '(login:', u.openid + '/123456)', '-', r.rows[0].id)
     }
 
     // Fetch admin id (must already exist via seed-admin.cjs)
@@ -194,8 +197,13 @@ async function seedDemoData() {
       { title: '流浪动物关爱行动',       category: 'community',    desc: '因天气原因活动取消。原计划前往流浪动物救助站进行清洁和陪伴活动，下次重新安排。', location: '爱心动物救助站', lat: '39.8700000', lng: '116.3500000', start: d(-3, 9),   end: d(-3, 12),  radius: 300, max_p: 15, reward: 70,  status: 'cancelled', published: d(-10, 10) },
     ]
 
+    // Activities 2 and 3 are organized by volunteer 王五 (vol-003) so admin can test registration on them
+    const vol003Id = userIds['vol-003']
+    const activityOrganizer = (idx) => (idx === 2 || idx === 3) ? vol003Id : adminId
     const activityIds = []
-    for (const a of activityData) {
+    for (let i = 0; i < activityData.length; i++) {
+      const a = activityData[i]
+      const organizerId = activityOrganizer(i)
       const r = await client.query(
         `INSERT INTO activities (title, category, description, cover_image, location, latitude, longitude, start_time, end_time,
           checkin_radius, max_participants, reward_points, status, organizer_id, published_at)
@@ -203,10 +211,10 @@ async function seedDemoData() {
         [a.title, a.category, a.desc,
           `https://picsum.photos/seed/${encodeURIComponent(a.title)}/800/450`,
           a.location, a.lat, a.lng, a.start, a.end, a.radius, a.max_p, a.reward,
-          a.status, adminId, a.published]
+          a.status, organizerId, a.published]
       )
       activityIds.push(r.rows[0].id)
-      console.log('  activity:', r.rows[0].title, '-', r.rows[0].id)
+      console.log('  activity:', r.rows[0].title, '(organizer:', organizerId === adminId ? 'admin' : 'vol-003', ')', '-', r.rows[0].id)
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -377,17 +385,16 @@ async function seedDemoData() {
     // ─────────────────────────────────────────────────────────────
     console.log('\n[11/15] Seeding market posts...')
     const posts = [
-      { uid: volIds[0], type: 'supply',  title: '全新保温杯兑换',      content: '积分兑换全新不锈钢保温杯，500ml容量，颜色可选。适合日常使用和户外活动。', pts: 200, pt_type: 'activity', status: 'approved', contact: '微信: zhangsan_vol' },
-      { uid: volIds[3], type: 'supply',  title: '志愿者定制T恤转让',   content: '众爱联盟2025年度志愿者纪念T恤，L码，全新未穿，有两件可兑换。', pts: 150, pt_type: 'activity', status: 'approved', contact: '电话: 13800138004' },
-      { uid: volIds[1], type: 'demand',  title: '求兑换儿童绘本套装', content: '希望用积分兑换适合6-10岁儿童的绘本套装，用于捐赠给希望小学。', pts: 300, pt_type: 'donation', status: 'pending',  contact: '微信: lisi_charity' },
+      { uid: volIds[0], type: 'supply',  title: '全新保温杯兑换',      content: '积分兑换全新不锈钢保温杯，500ml容量，颜色可选。适合日常使用和户外活动。', status: 'approved', contact: '微信: zhangsan_vol' },
+      { uid: volIds[3], type: 'supply',  title: '志愿者定制T恤转让',   content: '众爱联盟2025年度志愿者纪念T恤，L码，全新未穿，有两件可兑换。', status: 'approved', contact: '电话: 13800138004' },
+      { uid: volIds[1], type: 'demand',  title: '求兑换儿童绘本套装', content: '希望用积分兑换适合6-10岁儿童的绘本套装，用于捐赠给希望小学。', status: 'pending',  contact: '微信: lisi_charity' },
     ]
     for (const p of posts) {
       const r = await client.query(
-        `INSERT INTO market_posts (user_id, post_type, title, content, images, contact_info, points_cost, point_type_used, status, reviewer_id, reviewed_at)
-         VALUES ($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9,$10,$11) RETURNING id`,
-        [p.uid, p.type, p.title, p.content, JSON.stringify([]), p.contact, p.pts, p.pt_type, p.status,
-          p.status === 'approved' ? adminId : null,
-          p.status === 'approved' ? new Date() : null]
+        `INSERT INTO market_posts (user_id, type, title, content, images, contact_info, status, reviewed_by)
+         VALUES ($1,$2,$3,$4,$5::jsonb,$6,$7,$8) RETURNING id`,
+        [p.uid, p.type, p.title, p.content, JSON.stringify([]), p.contact, p.status,
+          p.status === 'approved' ? adminId : null]
       )
       console.log('  market_post:', p.title, '-', r.rows[0].id)
     }

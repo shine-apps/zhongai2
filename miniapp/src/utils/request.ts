@@ -71,7 +71,11 @@ function request<T = unknown>(config: RequestConfig): Promise<T> {
         }
 
         if (statusCode >= 400) {
-          const msg = `请求失败 (${statusCode})`
+          // Try to extract the actual error message from the response body
+          const body = res.data as ApiResponse<T> | undefined
+          const msg = (body && typeof body === 'object' && 'message' in body && body.message)
+            ? body.message
+            : `请求失败 (${statusCode})`
           if (showError) showToast(msg)
           reject(new Error(msg))
           return

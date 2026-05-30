@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import { get, post } from '@/utils/request'
+import { get, post, del } from '@/utils/request'
 import { isLoggedIn } from '@/utils/auth'
 
 interface Activity {
@@ -27,7 +27,7 @@ const loading = ref(true)
 const registering = ref(false)
 
 const statusMap: Record<string, { label: string; type: string }> = {
-  draft: { label: '草稿', type: 'info' },
+  draft: { label: '草稿', type: 'default' },
   published: { label: '报名中', type: 'success' },
   ongoing: { label: '进行中', type: 'warning' },
   completed: { label: '已完成', type: 'primary' },
@@ -75,11 +75,11 @@ async function handleRegister() {
       success: async (res) => {
         if (res.confirm) {
           try {
-            await post(`/api/activities/${activityId.value}/cancel`)
+            await del(`/api/activities/${activityId.value}/register`, undefined, { showError: false })
             uni.showToast({ title: '已取消报名', icon: 'success' })
             fetchDetail()
-          } catch {
-            uni.showToast({ title: '取消报名失败', icon: 'none' })
+          } catch (err: any) {
+            uni.showToast({ title: err?.message || '取消报名失败', icon: 'none' })
           }
         }
       },
@@ -89,11 +89,11 @@ async function handleRegister() {
 
   registering.value = true
   try {
-    await post(`/api/activities/${activityId.value}/register`)
+    await post(`/api/activities/${activityId.value}/register`, undefined, { showError: false })
     uni.showToast({ title: '报名成功', icon: 'success' })
     fetchDetail()
-  } catch {
-    uni.showToast({ title: '报名失败', icon: 'none' })
+  } catch (err: any) {
+    uni.showToast({ title: err?.message || '报名失败', icon: 'none' })
   } finally {
     registering.value = false
   }
@@ -114,7 +114,7 @@ onLoad((query) => {
     <view class="info-section">
       <view class="title-row">
         <text class="detail-title">{{ activity.title }}</text>
-        <wd-tag :type="(statusMap[activity.status]?.type || 'info') as any" plain>
+        <wd-tag :type="(statusMap[activity.status]?.type || 'default') as any" plain>
           {{ statusMap[activity.status]?.label || activity.status }}
         </wd-tag>
       </view>

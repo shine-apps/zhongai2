@@ -37,7 +37,7 @@ const keyword = ref('')
 const currentCategory = computed(() => tabs[currentTab.value].value)
 
 const statusMap: Record<string, { label: string; type: string }> = {
-  draft: { label: '草稿', type: 'info' },
+  draft: { label: '草稿', type: 'default' },
   published: { label: '报名中', type: 'success' },
   ongoing: { label: '进行中', type: 'warning' },
   completed: { label: '已完成', type: 'primary' },
@@ -137,7 +137,7 @@ onPullDownRefresh(async () => {
             <text class="meta-text">{{ item.location }}</text>
           </view>
           <view class="item-bottom">
-            <wd-tag :type="(statusMap[item.status]?.type || 'info') as any" size="small" plain>
+            <wd-tag :type="(statusMap[item.status]?.type || 'default') as any" size="small" plain>
               {{ statusMap[item.status]?.label || item.status }}
             </wd-tag>
             <view class="points-badge">
