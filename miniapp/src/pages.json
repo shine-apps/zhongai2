@@ -45,6 +45,26 @@
     {
       "path": "pages/login/index",
       "style": { "navigationBarTitleText": "登录", "navigationStyle": "custom" }
+    },
+    {
+      "path": "pages/market/index",
+      "style": { "navigationBarTitleText": "爱心集市" }
+    },
+    {
+      "path": "pages/market/detail",
+      "style": { "navigationBarTitleText": "帖子详情" }
+    },
+    {
+      "path": "pages/market/create",
+      "style": { "navigationBarTitleText": "发布帖子" }
+    },
+    {
+      "path": "pages/market/my-posts",
+      "style": { "navigationBarTitleText": "我的帖子" }
+    },
+    {
+      "path": "pages/market/favorites",
+      "style": { "navigationBarTitleText": "我的收藏" }
     }
   ],
   "globalStyle": {

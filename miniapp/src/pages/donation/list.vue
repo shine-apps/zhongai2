@@ -74,7 +74,7 @@ onPullDownRefresh(async () => {
 <template>
   <view class="donation-list-page">
     <wd-tabs v-model="currentTab" @change="onTabChange">
-      <wd-tab v-for="tab in tabs" :key="tab.value" :name="tab.name" />
+      <wd-tab v-for="tab in tabs" :key="tab.value" :name="tab.name" :title="tab.name" />
     </wd-tabs>
 
     <view class="list-content">

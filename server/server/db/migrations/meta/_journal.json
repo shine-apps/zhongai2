@@ -8,6 +8,13 @@
       "when": 1779792592674,
       "tag": "0000_absurd_lizard",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780060800000,
+      "tag": "0001_market_favorites",
+      "breakpoints": true
     }
   ]
 }

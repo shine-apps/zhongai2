@@ -7,7 +7,7 @@ export { activityRegistrations, activityRegistrationsRelations, type ActivityReg
 export { activityCheckins, activityCheckinsRelations, type ActivityCheckin, type NewActivityCheckin } from './activity-checkins'
 export { activityGalleries, activityGalleriesRelations, type ActivityGallery, type NewActivityGallery } from './activity-galleries'
 export { donations, donationsRelations, type Donation, type NewDonation } from './donations'
-export { marketPosts, marketPostsRelations, type MarketPost, type NewMarketPost } from './market-posts'
+export { marketPosts, marketPostsRelations, marketFavorites, marketFavoritesRelations, type MarketPost, type NewMarketPost, type MarketFavorite, type NewMarketFavorite } from './market-posts'
 export { banners, type Banner, type NewBanner } from './banners'
 export { notifications, notificationsRelations, type Notification, type NewNotification } from './notifications'
 export { notificationTemplates, type NotificationTemplate, type NewNotificationTemplate } from './notification-templates'

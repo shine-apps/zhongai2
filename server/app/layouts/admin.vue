@@ -33,6 +33,10 @@
           <el-icon><Document /></el-icon>
           <template #title>审核管理</template>
         </el-menu-item>
+        <el-menu-item index="/admin/market">
+          <el-icon><ShoppingCart /></el-icon>
+          <template #title>集市管理</template>
+        </el-menu-item>
       </el-menu>
     </el-aside>
 
@@ -75,6 +79,7 @@ import {
   Calendar,
   Coin,
   Document,
+  ShoppingCart,
   Fold,
   Expand,
   ArrowDown,

@@ -15,6 +15,8 @@ const quickMenus = [
 const menuList = [
   { icon: 'user', text: '个人资料', url: '/pages/user/profile' },
   { icon: 'star', text: '积分明细', url: '/pages/points/index' },
+  { icon: 'goods', text: '我的帖子', url: '/pages/market/my-posts' },
+  { icon: 'star-filled', text: '我的收藏', url: '/pages/market/favorites' },
   { icon: 'medal', text: '荣誉等级', url: '' },
   { icon: 'info', text: '关于我们', url: '' },
 ]

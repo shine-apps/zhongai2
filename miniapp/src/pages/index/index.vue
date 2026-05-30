@@ -57,14 +57,19 @@ function handleGridClick(index: number) {
   const routes = [
     '/pages/activity/list',
     '/pages/donation/submit',
+    '/pages/market/index',
     '/pages/points/index',
     '/pages/user/realname',
   ]
   const url = routes[index]
   if (index === 0) {
     uni.switchTab({ url })
+  } else if (index === 2) {
+    uni.navigateTo({ url })
   } else if (!isLoggedIn()) {
     uni.navigateTo({ url: '/pages/login/index' })
+  } else if (index === 3) {
+    uni.switchTab({ url })
   } else {
     uni.navigateTo({ url })
   }
@@ -96,11 +101,12 @@ onPullDownRefresh(async () => {
     </view>
 
     <view class="quick-actions">
-      <wd-grid :column="4" :border="false" clickable>
+      <wd-grid :column="5" :border="false" clickable>
         <wd-grid-item icon="calendar" text="活动报名" @click="handleGridClick(0)" />
         <wd-grid-item icon="goods" text="爱心捐助" @click="handleGridClick(1)" />
-        <wd-grid-item icon="star" text="积分商城" @click="handleGridClick(2)" />
-        <wd-grid-item icon="certificate" text="实名认证" @click="handleGridClick(3)" />
+        <wd-grid-item icon="shop" text="爱心集市" @click="handleGridClick(2)" />
+        <wd-grid-item icon="star" text="积分商城" @click="handleGridClick(3)" />
+        <wd-grid-item icon="certificate" text="实名认证" @click="handleGridClick(4)" />
       </wd-grid>
     </view>
 
