@@ -42,11 +42,7 @@ function handleMenuClick(item: typeof menuList[0]) {
     uni.showToast({ title: '功能开发中', icon: 'none' })
     return
   }
-  if (item.url === '/pages/points/index') {
-    uni.switchTab({ url: item.url })
-  } else {
-    uni.navigateTo({ url: item.url })
-  }
+  uni.navigateTo({ url: item.url })
 }
 
 function goLogin() {

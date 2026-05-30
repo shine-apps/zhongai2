@@ -62,14 +62,10 @@ function handleGridClick(index: number) {
     '/pages/user/realname',
   ]
   const url = routes[index]
-  if (index === 0) {
+  if (index === 0 || index === 2) {
     uni.switchTab({ url })
-  } else if (index === 2) {
-    uni.navigateTo({ url })
   } else if (!isLoggedIn()) {
     uni.navigateTo({ url: '/pages/login/index' })
-  } else if (index === 3) {
-    uni.switchTab({ url })
   } else {
     uni.navigateTo({ url })
   }

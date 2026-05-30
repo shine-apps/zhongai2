@@ -92,10 +92,10 @@
         "selectedIconPath": "static/tab/activity-active.png"
       },
       {
-        "pagePath": "pages/points/index",
-        "text": "积分",
-        "iconPath": "static/tab/points.png",
-        "selectedIconPath": "static/tab/points-active.png"
+        "pagePath": "pages/market/index",
+        "text": "集市",
+        "iconPath": "static/tab/market.png",
+        "selectedIconPath": "static/tab/market-active.png"
       },
       {
         "pagePath": "pages/user/index",
