@@ -6,10 +6,9 @@ import { isLoggedIn } from '@/utils/auth'
 import { useUserStore } from '@/stores/user'
 
 interface PointsBalance {
-  total: number
-  activityPoints: number
-  donationPoints: number
+  activityBalance: number
   activityTotal: number
+  donationBalance: number
   donationTotal: number
 }
 
@@ -23,10 +22,9 @@ interface Transaction {
 
 const userStore = useUserStore()
 const balance = ref<PointsBalance>({
-  total: 0,
-  activityPoints: 0,
-  donationPoints: 0,
+  activityBalance: 0,
   activityTotal: 0,
+  donationBalance: 0,
   donationTotal: 0,
 })
 const transactions = ref<Transaction[]>([])
@@ -44,7 +42,8 @@ async function fetchBalance() {
   try {
     const data = await get<PointsBalance>('/api/points/balance')
     balance.value = data
-    animateNumber(data.total)
+    const total = (data.activityBalance ?? 0) + (data.donationBalance ?? 0)
+    animateNumber(total)
   } catch {
     // keep defaults
   }
@@ -97,12 +96,12 @@ onShow(() => {
       </view>
       <view class="points-columns">
         <view class="column-item">
-          <text class="column-value">{{ balance.activityPoints }}/{{ balance.activityTotal }}</text>
+          <text class="column-value">{{ balance.activityBalance }}/{{ balance.activityTotal }}</text>
           <text class="column-label">活动积分</text>
         </view>
         <view class="column-divider" />
         <view class="column-item">
-          <text class="column-value">{{ balance.donationPoints }}/{{ balance.donationTotal }}</text>
+          <text class="column-value">{{ balance.donationBalance }}/{{ balance.donationTotal }}</text>
           <text class="column-label">捐助积分</text>
         </view>
       </view>

@@ -274,8 +274,8 @@ export async function updateHonorLevel(userId: string) {
 
   if (!account) return
 
-  const totalPoints = (account.activityPointsTotal ?? 0) + (account.donationPointsTotal ?? 0)
-  const newLevel = calculateHonorLevel(totalPoints)
+  const activityPoints = account.activityPointsBalance ?? 0
+  const newLevel = calculateHonorLevel(activityPoints)
 
   const [user] = await db
     .select({ honorLevel: users.honorLevel })

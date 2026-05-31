@@ -206,7 +206,7 @@ describe('adjustPoints', () => {
       await fn(mockTx)
     })
 
-    pushResolve([{ activityPointsTotal: 250, donationPointsTotal: 0 }])
+    pushResolve([{ activityPointsBalance: 250, activityPointsTotal: 250, donationPointsBalance: 0, donationPointsTotal: 0 }])
     pushResolve([{ honorLevel: 0 }])
 
     await adjustPoints('admin-1', {
@@ -241,7 +241,7 @@ describe('adjustPoints', () => {
       await fn(mockTx)
     })
 
-    pushResolve([{ activityPointsTotal: 100, donationPointsTotal: 0 }])
+    pushResolve([{ activityPointsBalance: 100, activityPointsTotal: 100, donationPointsBalance: 0, donationPointsTotal: 0 }])
     pushResolve([{ honorLevel: 0 }])
 
     await adjustPoints('admin-1', {
