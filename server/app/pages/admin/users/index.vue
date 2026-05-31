@@ -30,7 +30,7 @@
       <el-table :data="users" v-loading="loading" stripe>
         <el-table-column label="头像" width="80">
           <template #default="{ row }">
-            <el-avatar :size="40" :src="row.avatar" />
+            <el-avatar :size="40" :src="row.avatarUrl" />
           </template>
         </el-table-column>
         <el-table-column prop="nickname" label="昵称" />
@@ -139,8 +139,8 @@ const loadUsers = async () => {
         status: searchForm.status || undefined,
       },
     })
-    users.value = res.data || res.items || []
-    pagination.total = res.total || 0
+    users.value = res.data?.list || []
+    pagination.total = res.data?.pagination?.total || 0
   } catch {
     ElMessage.error('加载用户列表失败')
   } finally {
@@ -168,9 +168,9 @@ const handleView = (row: any) => {
 const handleToggleFreeze = async (row: any) => {
   const action = row.status === 'frozen' ? '解冻' : '冻结'
   try {
-    await fetchWithAuth(`/api/admin/users/${row.id}/status`, {
-      method: 'PUT',
-      body: { status: row.status === 'frozen' ? 'active' : 'frozen' },
+    const endpoint = row.status === 'frozen' ? 'unfreeze' : 'freeze'
+    await fetchWithAuth(`/api/admin/users/${row.id}/${endpoint}`, {
+      method: 'POST',
     })
     ElMessage.success(`${action}成功`)
     loadUsers()

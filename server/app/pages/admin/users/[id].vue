@@ -10,7 +10,7 @@
           </template>
           <div class="info-section">
             <div class="avatar-wrap">
-              <el-avatar :size="80" :src="user.avatar" />
+              <el-avatar :size="80" :src="user.avatarUrl" />
             </div>
             <el-descriptions :column="1" border>
               <el-descriptions-item label="昵称">{{ user.nickname }}</el-descriptions-item>
@@ -78,7 +78,7 @@ const statusTypeMap: Record<string, 'primary' | 'success' | 'warning' | 'info' |
 }
 
 const user = reactive({
-  avatar: '',
+  avatarUrl: '',
   nickname: '',
   phone: '',
   memberNo: '',
@@ -95,7 +95,14 @@ const user = reactive({
 const loadUser = async () => {
   try {
     const res: any = await fetchWithAuth(`/api/admin/users/${route.params.id}`)
-    Object.assign(user, res)
+    const data = res.data || res
+    Object.assign(user, {
+      ...data,
+      activityPointsBalance: data.points?.activityPointsBalance ?? 0,
+      activityPointsTotal: data.points?.activityPointsTotal ?? 0,
+      donationPointsBalance: data.points?.donationPointsBalance ?? 0,
+      donationPointsTotal: data.points?.donationPointsTotal ?? 0,
+    })
   } catch {
     ElMessage.error('加载用户信息失败')
   }

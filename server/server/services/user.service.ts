@@ -13,10 +13,24 @@ const HONOR_LEVELS = [
 ]
 
 function maskUser(user: any) {
+  let maskedIdCard = user.idCardNo
+  if (user.idCardNo) {
+    // Only decrypt if the value is in encrypted format (iv:authTag:data)
+    if (user.idCardNo.includes(':')) {
+      try {
+        maskedIdCard = maskIdCard(decryptIdCard(user.idCardNo))
+      } catch {
+        // Fallback: mask as-is if decryption fails
+        maskedIdCard = maskIdCard(user.idCardNo)
+      }
+    } else {
+      maskedIdCard = maskIdCard(user.idCardNo)
+    }
+  }
   return {
     ...user,
     phone: user.phone ? maskPhone(user.phone) : user.phone,
-    idCardNo: user.idCardNo ? maskIdCard(decryptIdCard(user.idCardNo)) : user.idCardNo,
+    idCardNo: maskedIdCard,
   }
 }
 
@@ -200,7 +214,9 @@ export async function adminGetUserById(userId: string) {
 
   return {
     ...user,
-    idCardNo: user.idCardNo ? maskIdCard(decryptIdCard(user.idCardNo)) : user.idCardNo,
+    idCardNo: user.idCardNo
+      ? (user.idCardNo.includes(':') ? maskIdCard(decryptIdCard(user.idCardNo)) : maskIdCard(user.idCardNo))
+      : user.idCardNo,
     points: pointAccount
       ? {
           activityPointsBalance: pointAccount.activityPointsBalance,
