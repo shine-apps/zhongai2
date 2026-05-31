@@ -86,7 +86,7 @@ const stats = reactive({
 const loadStats = async () => {
   try {
     const res: any = await fetchWithAuth('/api/admin/stats')
-    Object.assign(stats, res)
+    Object.assign(stats, res.data || res)
   } catch {}
 }
 

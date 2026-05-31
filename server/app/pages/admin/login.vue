@@ -80,7 +80,7 @@ const handleLogin = async () => {
       method: 'POST',
       body: form,
     })
-    setToken(res.token)
+    setToken(res.data.accessToken)
     ElMessage.success('登录成功')
     await navigateTo('/admin')
   } catch (error: any) {
