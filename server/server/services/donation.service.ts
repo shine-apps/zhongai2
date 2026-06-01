@@ -199,6 +199,15 @@ export async function approveDonation(
         })
         .where(eq(donations.id, donationId))
 
+      // Get current balance to compute balanceAfter
+      const [account] = await tx
+        .select()
+        .from(pointAccounts)
+        .where(eq(pointAccounts.userId, existing.userId))
+        .limit(1)
+
+      const newBalance = (account?.donationPointsBalance ?? 0) + pointsToGrant
+
       await tx
         .update(pointAccounts)
         .set({
@@ -211,7 +220,9 @@ export async function approveDonation(
       await tx.insert(pointTransactions).values({
         userId: existing.userId,
         pointType: 'donation',
+        changeType: 'earn',
         amount: pointsToGrant,
+        balanceAfter: newBalance,
         sourceType: 'donation',
         sourceId: donationId,
         description: '捐助审核通过，获得积分',

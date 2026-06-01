@@ -85,12 +85,14 @@ import {
   ArrowDown,
 } from '@element-plus/icons-vue'
 
+const { clearToken } = useAdminAuth()
 const isCollapsed = ref(false)
 const route = useRoute()
 
 const activeMenu = computed(() => route.path)
 
 const handleLogout = async () => {
+  clearToken()
   await navigateTo('/admin/login')
 }
 </script>

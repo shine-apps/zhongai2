@@ -276,9 +276,7 @@ const submitReview = async () => {
   }
 }
 
-onMounted(() => {
-  loadPosts()
-})
+useAsyncData('market-posts', () => loadPosts(), { server: false })
 </script>
 
 <style scoped>

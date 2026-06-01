@@ -1,5 +1,5 @@
 <template>
-  <div class="donations-page">
+  <div class="audit-page">
     <el-card shadow="hover">
       <el-form :inline="true" :model="searchForm" class="search-form">
         <el-form-item label="状态">
@@ -72,16 +72,12 @@
             {{ formatDate(row.createdAt) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button
-              v-if="row.status === 'pending'"
-              type="primary"
-              link
-              @click="openAuditDialog(row)"
-            >
-              审核
-            </el-button>
+            <template v-if="row.status === 'pending'">
+              <el-button type="success" link @click="handleApprove(row)">通过</el-button>
+              <el-button type="danger" link @click="openRejectDialog(row)">拒绝</el-button>
+            </template>
             <span v-else>-</span>
           </template>
         </el-table-column>
@@ -100,35 +96,42 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="auditDialogVisible" title="审核捐助" width="500px">
-      <el-form :model="auditForm" label-width="80px">
-        <el-form-item label="审核结果">
-          <el-radio-group v-model="auditForm.result">
-            <el-radio value="approved">通过</el-radio>
-            <el-radio value="rejected">拒绝</el-radio>
-          </el-radio-group>
+    <!-- Approve dialog -->
+    <el-dialog v-model="approveDialogVisible" title="审核通过" width="500px">
+      <el-form :model="approveForm" label-width="100px">
+        <el-form-item label="赠送积分">
+          <el-input-number v-model="approveForm.pointsToGrant" :min="0" :max="9999" />
         </el-form-item>
-        <el-form-item v-if="auditForm.result === 'approved'" label="赠送积分">
-          <el-input-number v-model="auditForm.pointsToGrant" :min="0" :max="9999" />
-        </el-form-item>
-        <el-form-item label="审核意见">
+        <el-form-item label="审核备注">
           <el-input
-            v-model="auditForm.reason"
+            v-model="approveForm.reviewRemark"
             type="textarea"
             :rows="3"
-            :placeholder="auditForm.result === 'rejected' ? '请输入拒绝原因（必填）' : '请输入审核意见（选填）'"
+            placeholder="请输入审核备注（选填）"
           />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="auditDialogVisible = false">取消</el-button>
-        <el-button
-          :type="auditForm.result === 'approved' ? 'primary' : 'danger'"
-          :loading="auditSubmitting"
-          @click="handleAudit"
-        >
-          确认{{ auditForm.result === 'approved' ? '通过' : '拒绝' }}
-        </el-button>
+        <el-button @click="approveDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="auditSubmitting" @click="submitApprove">确认通过</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- Reject dialog -->
+    <el-dialog v-model="rejectDialogVisible" title="审核拒绝" width="500px">
+      <el-form :model="rejectForm" label-width="100px">
+        <el-form-item label="拒绝原因">
+          <el-input
+            v-model="rejectForm.reviewRemark"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入拒绝原因（必填）"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="rejectDialogVisible = false">取消</el-button>
+        <el-button type="danger" :loading="auditSubmitting" @click="submitReject">确认拒绝</el-button>
       </template>
     </el-dialog>
   </div>
@@ -155,7 +158,8 @@ const statusTypeMap: Record<string, 'primary' | 'success' | 'warning' | 'info' |
 
 const loading = ref(false)
 const donations = ref<any[]>([])
-const auditDialogVisible = ref(false)
+const approveDialogVisible = ref(false)
+const rejectDialogVisible = ref(false)
 const auditSubmitting = ref(false)
 const currentDonation = ref<any>(null)
 
@@ -165,10 +169,13 @@ const searchForm = reactive({
   dateRange: null as [string, string] | null,
 })
 
-const auditForm = reactive({
-  result: 'approved',
-  reason: '',
+const approveForm = reactive({
   pointsToGrant: 0,
+  reviewRemark: '',
+})
+
+const rejectForm = reactive({
+  reviewRemark: '',
 })
 
 const pagination = reactive({
@@ -218,53 +225,69 @@ const handleReset = () => {
   loadDonations()
 }
 
-const openAuditDialog = (row: any) => {
+const handleApprove = (row: any) => {
   currentDonation.value = row
-  auditForm.result = 'approved'
-  auditForm.reason = ''
-  auditForm.pointsToGrant = 0
-  auditDialogVisible.value = true
+  approveForm.pointsToGrant = 0
+  approveForm.reviewRemark = ''
+  approveDialogVisible.value = true
 }
 
-const handleAudit = async () => {
+const submitApprove = async () => {
   if (!currentDonation.value) return
-  if (auditForm.result === 'rejected' && !auditForm.reason.trim()) {
-    ElMessage.warning('请输入拒绝原因')
-    return
-  }
   auditSubmitting.value = true
   try {
-    if (auditForm.result === 'approved') {
-      await fetchWithAuth(`/api/donations/${currentDonation.value.id}/approve`, {
-        method: 'PATCH',
-        body: {
-          pointsToGrant: auditForm.pointsToGrant,
-          reviewRemark: auditForm.reason || undefined,
-        },
-      })
-    } else {
-      await fetchWithAuth(`/api/donations/${currentDonation.value.id}/reject`, {
-        method: 'PATCH',
-        body: {
-          reviewRemark: auditForm.reason,
-        },
-      })
-    }
-    ElMessage.success(auditForm.result === 'approved' ? '审核通过' : '已拒绝')
-    auditDialogVisible.value = false
+    await fetchWithAuth(`/api/donations/${currentDonation.value.id}/approve`, {
+      method: 'PATCH',
+      body: {
+        pointsToGrant: approveForm.pointsToGrant,
+        reviewRemark: approveForm.reviewRemark || undefined,
+      },
+    })
+    ElMessage.success('审核通过')
+    approveDialogVisible.value = false
     loadDonations()
   } catch {
-    ElMessage.error('审核失败')
+    ElMessage.error('审核操作失败')
   } finally {
     auditSubmitting.value = false
   }
 }
 
-useAsyncData('donations-list', () => loadDonations(), { server: false })
+const openRejectDialog = (row: any) => {
+  currentDonation.value = row
+  rejectForm.reviewRemark = ''
+  rejectDialogVisible.value = true
+}
+
+const submitReject = async () => {
+  if (!currentDonation.value) return
+  if (!rejectForm.reviewRemark.trim()) {
+    ElMessage.warning('请输入拒绝原因')
+    return
+  }
+  auditSubmitting.value = true
+  try {
+    await fetchWithAuth(`/api/donations/${currentDonation.value.id}/reject`, {
+      method: 'PATCH',
+      body: {
+        reviewRemark: rejectForm.reviewRemark,
+      },
+    })
+    ElMessage.success('已拒绝')
+    rejectDialogVisible.value = false
+    loadDonations()
+  } catch {
+    ElMessage.error('审核操作失败')
+  } finally {
+    auditSubmitting.value = false
+  }
+}
+
+useAsyncData('audit-list', () => loadDonations(), { server: false })
 </script>
 
 <style scoped>
-.donations-page {
+.audit-page {
   padding: 0;
 }
 
