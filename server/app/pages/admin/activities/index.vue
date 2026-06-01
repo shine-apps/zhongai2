@@ -8,12 +8,14 @@
           </el-form-item>
           <el-form-item label="分类">
             <el-select v-model="searchForm.category" placeholder="全部" clearable>
-              <el-option label="环保" value="环保" />
-              <el-option label="助老" value="助老" />
-              <el-option label="助学" value="助学" />
-              <el-option label="社区" value="社区" />
-              <el-option label="医疗" value="医疗" />
-              <el-option label="其他" value="其他" />
+              <el-option label="环保" value="environment" />
+              <el-option label="助老" value="elderly" />
+              <el-option label="助学" value="education" />
+              <el-option label="社区" value="community" />
+              <el-option label="医疗" value="medical" />
+              <el-option label="健康" value="health" />
+              <el-option label="扶贫" value="poverty" />
+              <el-option label="其他" value="other" />
             </el-select>
           </el-form-item>
           <el-form-item label="状态">
@@ -51,7 +53,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" min-width="150" />
-        <el-table-column prop="category" label="分类" width="100" />
+        <el-table-column label="分类" width="100">
+          <template #default="{ row }">
+            {{ categoryMap[row.category] || row.category }}
+          </template>
+        </el-table-column>
         <el-table-column label="时间" width="180">
           <template #default="{ row }">
             {{ formatDate(row.startTime) }}
@@ -116,6 +122,17 @@ definePageMeta({
 
 const { fetchWithAuth } = useAdminAuth()
 
+const categoryMap: Record<string, string> = {
+  environment: '环保',
+  elderly: '助老',
+  education: '助学',
+  community: '社区',
+  medical: '医疗',
+  health: '健康',
+  poverty: '扶贫',
+  other: '其他',
+}
+
 const statusMap: Record<string, string> = {
   draft: '草稿',
   published: '已发布',
@@ -164,8 +181,8 @@ const loadActivities = async () => {
         status: searchForm.status || undefined,
       },
     })
-    activities.value = res.data || res.items || []
-    pagination.total = res.total || 0
+    activities.value = res.data?.list || []
+    pagination.total = res.data?.pagination?.total || 0
   } catch {
     ElMessage.error('加载活动列表失败')
   } finally {
@@ -193,7 +210,7 @@ const handleView = (row: any) => {
 const handlePublish = async (row: any) => {
   try {
     await fetchWithAuth(`/api/activities/${row.id}/publish`, {
-      method: 'PUT',
+      method: 'POST',
     })
     ElMessage.success('发布成功')
     loadActivities()
@@ -205,7 +222,7 @@ const handlePublish = async (row: any) => {
 const handleCancel = async (row: any) => {
   try {
     await fetchWithAuth(`/api/activities/${row.id}/cancel`, {
-      method: 'PUT',
+      method: 'POST',
     })
     ElMessage.success('取消成功')
     loadActivities()

@@ -17,6 +17,7 @@
   "dependencies": {
     "@element-plus/nuxt": "latest",
     "bcryptjs": "latest",
+    "dayjs": "^1.11.21",
     "drizzle-orm": "latest",
     "jose": "latest",
     "nuxt": "latest",

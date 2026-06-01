@@ -4,7 +4,7 @@ import { success, createErrorResponse, ResponseCode } from '#server/utils/respon
 
 const createActivitySchema = z.object({
   title: z.string().min(1, '标题不能为空').max(100, '标题不能超过100个字符'),
-  category: z.enum(['education', 'environment', 'elderly', 'medical', 'poverty', 'other'], { message: '无效的活动类别' }),
+  category: z.enum(['education', 'environment', 'elderly', 'medical', 'poverty', 'community', 'health', 'other'], { message: '无效的活动类别' }),
   description: z.string().optional(),
   coverImage: z.string().max(500).optional(),
   startTime: z.coerce.date({ message: '无效的开始时间' }),
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
   const parsed = createActivitySchema.safeParse(body)
   if (!parsed.success) {
-    throw createErrorResponse(422, parsed.error.errors.map((e) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
+    throw createErrorResponse(422, parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', '), ResponseCode.VALIDATION_ERROR)
   }
 
   const activity = await createActivity(parsed.data, auth.userId)

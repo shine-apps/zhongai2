@@ -28,13 +28,19 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/admin/**': {
-      ssr: true,
+      ssr: false,
     },
   },
 
   typescript: {
     strict: false,
     typeCheck: false,
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: ['dayjs', 'dayjs/plugin/*.js'],
+    },
   },
 
   compatibilityDate: '2026-05-26',

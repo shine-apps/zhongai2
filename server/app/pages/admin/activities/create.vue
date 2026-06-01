@@ -15,12 +15,14 @@
         </el-form-item>
         <el-form-item label="分类" prop="category">
           <el-select v-model="form.category" placeholder="请选择分类">
-            <el-option label="环保" value="环保" />
-            <el-option label="助老" value="助老" />
-            <el-option label="助学" value="助学" />
-            <el-option label="社区" value="社区" />
-            <el-option label="医疗" value="医疗" />
-            <el-option label="其他" value="其他" />
+            <el-option label="环保" value="environment" />
+            <el-option label="助老" value="elderly" />
+            <el-option label="助学" value="education" />
+            <el-option label="社区" value="community" />
+            <el-option label="医疗" value="medical" />
+            <el-option label="健康" value="health" />
+            <el-option label="扶贫" value="poverty" />
+            <el-option label="其他" value="other" />
           </el-select>
         </el-form-item>
         <el-form-item label="活动描述" prop="description">
