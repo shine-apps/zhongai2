@@ -3,6 +3,21 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  devServer: {
+    host: '0.0.0.0',
+  },
+
+  nitro: {
+    devProxy: {},
+    routeRules: {
+      '/**': {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      },
+    },
+  },
+
   dir: {
     app: 'app',
     server: 'server',
