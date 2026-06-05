@@ -14,9 +14,9 @@ export const activityGalleries = pgTable('activity_galleries', {
   duration: integer('duration'),
   sortOrder: integer('sort_order').default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  activityIdIdx: index('idx_activity_galleries_activity_id').on(table.activityId),
-}))
+}, (table) => [
+  index('idx_activity_galleries_activity_id').on(table.activityId),
+])
 
 export const activityGalleriesRelations = relations(activityGalleries, ({ one }) => ({
   activity: one(activities, {

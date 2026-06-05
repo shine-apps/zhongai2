@@ -13,12 +13,12 @@ export const notifications = pgTable('notifications', {
   readAt: timestamp('read_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   expiresAt: timestamp('expires_at', { withTimezone: true }),
-}, (table) => ({
-  userIdIdx: index('idx_notifications_user_id').on(table.userId),
-  typeIdx: index('idx_notifications_type').on(table.type),
-  isReadIdx: index('idx_notifications_is_read').on(table.isRead),
-  createdAtIdx: index('idx_notifications_created_at').on(table.createdAt),
-}))
+}, (table) => [
+  index('idx_notifications_user_id').on(table.userId),
+  index('idx_notifications_type').on(table.type),
+  index('idx_notifications_is_read').on(table.isRead),
+  index('idx_notifications_created_at').on(table.createdAt),
+])
 
 export const notificationsRelations = relations(notifications, ({ one }) => ({
   user: one(users, {

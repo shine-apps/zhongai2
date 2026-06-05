@@ -13,12 +13,12 @@ export const pointTransactions = pgTable('point_transactions', {
   sourceId: uuid('source_id'),
   description: varchar('description', { length: 200 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  userIdIdx: index('idx_point_transactions_user_id').on(table.userId),
-  pointTypeIdx: index('idx_point_transactions_point_type').on(table.pointType),
-  sourceTypeIdx: index('idx_point_transactions_source_type').on(table.sourceType),
-  createdAtIdx: index('idx_point_transactions_created_at').on(table.createdAt),
-}))
+}, (table) => [
+  index('idx_point_transactions_user_id').on(table.userId),
+  index('idx_point_transactions_point_type').on(table.pointType),
+  index('idx_point_transactions_source_type').on(table.sourceType),
+  index('idx_point_transactions_created_at').on(table.createdAt),
+])
 
 export const pointTransactionsRelations = relations(pointTransactions, ({ one }) => ({
   user: one(users, {

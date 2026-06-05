@@ -25,13 +25,13 @@ export const activities = pgTable('activities', {
   publishedAt: timestamp('published_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  organizerIdIdx: index('idx_activities_organizer_id').on(table.organizerId),
-  statusIdx: index('idx_activities_status').on(table.status),
-  categoryIdx: index('idx_activities_category').on(table.category),
-  startTimeIdx: index('idx_activities_start_time').on(table.startTime),
-  createdAtIdx: index('idx_activities_created_at').on(table.createdAt),
-}))
+}, (table) => [
+  index('idx_activities_organizer_id').on(table.organizerId),
+  index('idx_activities_status').on(table.status),
+  index('idx_activities_category').on(table.category),
+  index('idx_activities_start_time').on(table.startTime),
+  index('idx_activities_created_at').on(table.createdAt),
+])
 
 export const activitiesRelations = relations(activities, ({ one, many }) => ({
   organizer: one(users, {

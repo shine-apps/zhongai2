@@ -18,9 +18,9 @@ export const notificationSettings = pgTable('notification_settings', {
   quietHoursEnd: time('quiet_hours_end'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  userIdIdx: index('idx_notification_settings_user_id').on(table.userId),
-}))
+}, (table) => [
+  index('idx_notification_settings_user_id').on(table.userId),
+])
 
 export const notificationSettingsRelations = relations(notificationSettings, ({ one }) => ({
   user: one(users, {

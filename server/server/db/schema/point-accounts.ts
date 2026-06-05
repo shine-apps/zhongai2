@@ -11,9 +11,9 @@ export const pointAccounts = pgTable('point_accounts', {
   donationPointsTotal: integer('donation_points_total').default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  userIdIdx: index('idx_point_accounts_user_id').on(table.userId),
-}))
+}, (table) => [
+  index('idx_point_accounts_user_id').on(table.userId),
+])
 
 export const pointAccountsRelations = relations(pointAccounts, ({ one }) => ({
   user: one(users, {

@@ -10,10 +10,10 @@ export const pointRules = pgTable('point_rules', {
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  ruleTypeIdx: index('idx_point_rules_rule_type').on(table.ruleType),
-  isActiveIdx: index('idx_point_rules_is_active').on(table.isActive),
-}))
+}, (table) => [
+  index('idx_point_rules_rule_type').on(table.ruleType),
+  index('idx_point_rules_is_active').on(table.isActive),
+])
 
 export type PointRule = typeof pointRules.$inferSelect
 export type NewPointRule = typeof pointRules.$inferInsert

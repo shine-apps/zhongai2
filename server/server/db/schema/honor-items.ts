@@ -15,10 +15,10 @@ export const honorItems = pgTable('honor_items', {
   stock: integer('stock').default(-1),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  typeIdx: index('idx_honor_items_type').on(table.type),
-  isActiveIdx: index('idx_honor_items_is_active').on(table.isActive),
-}))
+}, (table) => [
+  index('idx_honor_items_type').on(table.type),
+  index('idx_honor_items_is_active').on(table.isActive),
+])
 
 export type HonorItem = typeof honorItems.$inferSelect
 export type NewHonorItem = typeof honorItems.$inferInsert

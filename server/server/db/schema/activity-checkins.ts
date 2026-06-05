@@ -16,12 +16,12 @@ export const activityCheckins = pgTable('activity_checkins', {
   verifiedAt: timestamp('verified_at', { withTimezone: true }),
   pointsGranted: boolean('points_granted').default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  activityUserUnique: unique('uq_activity_checkins_activity_user').on(table.activityId, table.userId),
-  activityIdIdx: index('idx_activity_checkins_activity_id').on(table.activityId),
-  userIdIdx: index('idx_activity_checkins_user_id').on(table.userId),
-  checkinTimeIdx: index('idx_activity_checkins_checkin_time').on(table.checkinTime),
-}))
+}, (table) => [
+  unique('uq_activity_checkins_activity_user').on(table.activityId, table.userId),
+  index('idx_activity_checkins_activity_id').on(table.activityId),
+  index('idx_activity_checkins_user_id').on(table.userId),
+  index('idx_activity_checkins_checkin_time').on(table.checkinTime),
+])
 
 export const activityCheckinsRelations = relations(activityCheckins, ({ one }) => ({
   activity: one(activities, {

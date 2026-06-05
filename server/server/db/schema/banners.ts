@@ -11,10 +11,10 @@ export const banners = pgTable('banners', {
   startAt: timestamp('start_at', { withTimezone: true }),
   endAt: timestamp('end_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  isActiveIdx: index('idx_banners_is_active').on(table.isActive),
-  sortOrderIdx: index('idx_banners_sort_order').on(table.sortOrder),
-}))
+}, (table) => [
+  index('idx_banners_is_active').on(table.isActive),
+  index('idx_banners_sort_order').on(table.sortOrder),
+])
 
 export type Banner = typeof banners.$inferSelect
 export type NewBanner = typeof banners.$inferInsert

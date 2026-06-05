@@ -19,12 +19,12 @@ export const marketPosts = pgTable('market_posts', {
   reviewNote: varchar('review_note', { length: 200 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  userIdIdx: index('idx_market_posts_user_id').on(table.userId),
-  statusIdx: index('idx_market_posts_status').on(table.status),
-  typeIdx: index('idx_market_posts_type').on(table.type),
-  createdAtIdx: index('idx_market_posts_created_at').on(table.createdAt),
-}))
+}, (table) => [
+  index('idx_market_posts_user_id').on(table.userId),
+  index('idx_market_posts_status').on(table.status),
+  index('idx_market_posts_type').on(table.type),
+  index('idx_market_posts_created_at').on(table.createdAt),
+])
 
 export const marketPostsRelations = relations(marketPosts, ({ one }) => ({
   user: one(users, {
@@ -43,10 +43,10 @@ export const marketFavorites = pgTable('market_favorites', {
   postId: uuid('post_id').notNull().references(() => marketPosts.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  postUserUniq: unique('uniq_market_favorites_post_user').on(table.postId, table.userId),
-  userIdIdx: index('idx_market_favorites_user_id').on(table.userId),
-}))
+}, (table) => [
+  unique('uniq_market_favorites_post_user').on(table.postId, table.userId),
+  index('idx_market_favorites_user_id').on(table.userId),
+])
 
 export const marketFavoritesRelations = relations(marketFavorites, ({ one }) => ({
   post: one(marketPosts, {

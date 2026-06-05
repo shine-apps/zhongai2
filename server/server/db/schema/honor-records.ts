@@ -20,12 +20,12 @@ export const honorRecords = pgTable('honor_records', {
   note: varchar('note', { length: 200 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  userItemUnique: unique('uq_honor_records_user_item').on(table.userId, table.itemId),
-  userIdIdx: index('idx_honor_records_user_id').on(table.userId),
-  itemIdIdx: index('idx_honor_records_item_id').on(table.itemId),
-  statusIdx: index('idx_honor_records_status').on(table.status),
-}))
+}, (table) => [
+  unique('uq_honor_records_user_item').on(table.userId, table.itemId),
+  index('idx_honor_records_user_id').on(table.userId),
+  index('idx_honor_records_item_id').on(table.itemId),
+  index('idx_honor_records_status').on(table.status),
+])
 
 export const honorRecordsRelations = relations(honorRecords, ({ one }) => ({
   user: one(users, {

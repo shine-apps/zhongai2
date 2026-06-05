@@ -20,12 +20,12 @@ export const feedbacks = pgTable('feedbacks', {
   userRatingNote: varchar('user_rating_note', { length: 200 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  userIdIdx: index('idx_feedbacks_user_id').on(table.userId),
-  statusIdx: index('idx_feedbacks_status').on(table.status),
-  typeIdx: index('idx_feedbacks_type').on(table.type),
-  assignedToIdx: index('idx_feedbacks_assigned_to').on(table.assignedTo),
-}))
+}, (table) => [
+  index('idx_feedbacks_user_id').on(table.userId),
+  index('idx_feedbacks_status').on(table.status),
+  index('idx_feedbacks_type').on(table.type),
+  index('idx_feedbacks_assigned_to').on(table.assignedTo),
+])
 
 export const feedbacksRelations = relations(feedbacks, ({ one }) => ({
   user: one(users, {

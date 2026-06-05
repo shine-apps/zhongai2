@@ -26,13 +26,13 @@ export const users = pgTable('users', {
   honorLevel: integer('honor_level').default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  openidIdx: index('idx_users_openid').on(table.openid),
-  phoneIdx: index('idx_users_phone').on(table.phone),
-  roleIdx: index('idx_users_role').on(table.role),
-  statusIdx: index('idx_users_status').on(table.status),
-  memberNoIdx: index('idx_users_member_no').on(table.memberNo),
-}))
+}, (table) => [
+  index('idx_users_openid').on(table.openid),
+  index('idx_users_phone').on(table.phone),
+  index('idx_users_role').on(table.role),
+  index('idx_users_status').on(table.status),
+  index('idx_users_member_no').on(table.memberNo),
+])
 
 export const usersRelations = relations(users, ({ many, one }) => ({
   pointAccount: one(pointAccounts, {

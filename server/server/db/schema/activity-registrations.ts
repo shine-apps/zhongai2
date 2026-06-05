@@ -11,12 +11,12 @@ export const activityRegistrations = pgTable('activity_registrations', {
   remark: varchar('remark', { length: 200 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  activityUserUnique: unique('uq_activity_registrations_activity_user').on(table.activityId, table.userId),
-  activityIdIdx: index('idx_activity_registrations_activity_id').on(table.activityId),
-  userIdIdx: index('idx_activity_registrations_user_id').on(table.userId),
-  statusIdx: index('idx_activity_registrations_status').on(table.status),
-}))
+}, (table) => [
+  unique('uq_activity_registrations_activity_user').on(table.activityId, table.userId),
+  index('idx_activity_registrations_activity_id').on(table.activityId),
+  index('idx_activity_registrations_user_id').on(table.userId),
+  index('idx_activity_registrations_status').on(table.status),
+])
 
 export const activityRegistrationsRelations = relations(activityRegistrations, ({ one }) => ({
   activity: one(activities, {

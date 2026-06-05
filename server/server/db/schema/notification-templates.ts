@@ -13,10 +13,10 @@ export const notificationTemplates = pgTable('notification_templates', {
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  typeIdx: index('idx_notification_templates_type').on(table.type),
-  isActiveIdx: index('idx_notification_templates_is_active').on(table.isActive),
-}))
+}, (table) => [
+  index('idx_notification_templates_type').on(table.type),
+  index('idx_notification_templates_is_active').on(table.isActive),
+])
 
 export type NotificationTemplate = typeof notificationTemplates.$inferSelect
 export type NewNotificationTemplate = typeof notificationTemplates.$inferInsert

@@ -18,12 +18,12 @@ export const donations = pgTable('donations', {
   pointsGranted: boolean('points_granted').default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-}, (table) => ({
-  userIdIdx: index('idx_donations_user_id').on(table.userId),
-  statusIdx: index('idx_donations_status').on(table.status),
-  donationTypeIdx: index('idx_donations_donation_type').on(table.donationType),
-  createdAtIdx: index('idx_donations_created_at').on(table.createdAt),
-}))
+}, (table) => [
+  index('idx_donations_user_id').on(table.userId),
+  index('idx_donations_status').on(table.status),
+  index('idx_donations_donation_type').on(table.donationType),
+  index('idx_donations_created_at').on(table.createdAt),
+])
 
 export const donationsRelations = relations(donations, ({ one }) => ({
   user: one(users, {
