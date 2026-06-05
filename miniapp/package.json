@@ -2,7 +2,9 @@
   "name": "zhongai-miniapp",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@11.5.1",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev:h5": "uni -p h5",
     "build:h5": "uni build -p h5",
     "dev:mp-weixin": "uni -p mp-weixin",

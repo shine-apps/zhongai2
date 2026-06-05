@@ -1,6 +1,6 @@
 import { getToken, clearToken } from './auth'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL as string || 'https://api.zhongai.example.com'
+const BASE_URL = import.meta.env.VITE_API_BASE_URL as string || ''
 
 interface ApiResponse<T = unknown> {
   code: number
