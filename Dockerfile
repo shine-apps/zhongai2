@@ -1,7 +1,7 @@
 # ============================================
 # Stage 1: Build H5 miniapp
 # ============================================
-FROM node:20-alpine AS miniapp-build
+FROM node:22-alpine AS miniapp-build
 
 RUN corepack enable && corepack prepare pnpm@11.5.1 --activate
 
@@ -17,7 +17,7 @@ RUN pnpm run build:h5
 # ============================================
 # Stage 2: Build Nuxt server
 # ============================================
-FROM node:20-alpine AS server-build
+FROM node:22-alpine AS server-build
 
 RUN corepack enable && corepack prepare pnpm@11.5.1 --activate
 
@@ -36,7 +36,7 @@ RUN pnpm run build
 # ============================================
 # Stage 3: Production image (Nitro only, no nginx/supervisord)
 # ============================================
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 
 # postgresql-client needed for migration scripts in entrypoint
 RUN apk add --no-cache postgresql-client
