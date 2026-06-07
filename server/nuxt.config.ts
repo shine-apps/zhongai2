@@ -33,12 +33,12 @@ export default defineNuxtConfig({
     importStyle: 'css',
   },
 
+  // Nitro auto-maps NUXT_* env vars at runtime (e.g., NUXT_JWT_SECRET → jwtSecret)
   runtimeConfig: {
-    jwtSecret: process.env.JWT_SECRET || '',
-    wechatAppId: process.env.WECHAT_APP_ID || '',
-    wechatAppSecret: process.env.WECHAT_APP_SECRET || '',
-    idCardEncryptionKey: process.env.ID_CARD_ENCRYPTION_KEY || '',
-    databaseUrl: process.env.DATABASE_URL || '',
+    jwtSecret: '',
+    wechatAppId: '',
+    wechatAppSecret: '',
+    idCardEncryptionKey: '',
   },
 
   routeRules: {

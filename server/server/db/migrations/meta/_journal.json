@@ -15,6 +15,13 @@
       "when": 1780060800000,
       "tag": "0001_market_favorites",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780800000000,
+      "tag": "0002_point_transactions_extra",
+      "breakpoints": true
     }
   ]
 }

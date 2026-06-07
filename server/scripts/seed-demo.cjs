@@ -89,6 +89,10 @@ async function seedDemoData() {
     await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_activity_chk_act_user  ON activity_checkins    (activity_id, user_id)`)
     await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_honor_records_user_item ON honor_records        (user_id, item_id)`)
 
+    // Ensure columns added by migration 0002 exist (idempotent)
+    await client.query(`ALTER TABLE point_transactions ADD COLUMN IF NOT EXISTS change_type varchar(10) DEFAULT 'earn'`)
+    await client.query(`ALTER TABLE point_transactions ADD COLUMN IF NOT EXISTS balance_after integer`)
+
     console.log('  Tables/indexes ensured.')
 
     // Clean previous demo data (order matters due to FK constraints)
