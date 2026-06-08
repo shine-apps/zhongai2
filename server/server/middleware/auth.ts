@@ -4,7 +4,7 @@ import { verifyToken } from '../utils/jwt'
 const PUBLIC_PATHS = ['/api/auth/login', '/api/auth/admin-login', '/api/auth/password-login', '/api/auth/refresh']
 
 // These paths allow unauthenticated GET requests (public read access)
-const PUBLIC_GET_PREFIXES = ['/api/activities', '/api/banners', '/api/market/posts']
+const PUBLIC_GET_PREFIXES = ['/api/activities', '/api/banners', '/api/market/posts', '/api/rankings']
 
 export default defineEventHandler(async (event) => {
   const path = event.path

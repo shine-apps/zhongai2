@@ -85,6 +85,10 @@ onShow(() => {
     fetchTransactions()
   }
 })
+
+function goRanking() {
+  uni.navigateTo({ url: '/pages/ranking/index' })
+}
 </script>
 
 <template>
@@ -104,6 +108,10 @@ onShow(() => {
           <text class="column-value">{{ balance.donationBalance }}/{{ balance.donationTotal }}</text>
           <text class="column-label">捐助积分</text>
         </view>
+      </view>
+      <view class="ranking-entry" @tap="goRanking">
+        <text class="ranking-entry-text">积分排行榜</text>
+        <wd-icon name="arrow-right" size="28rpx" color="#fff" />
       </view>
     </view>
 
@@ -194,6 +202,23 @@ onShow(() => {
   width: 2rpx;
   height: 60rpx;
   background: rgba(255, 255, 255, 0.3);
+}
+
+.ranking-entry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  margin-top: 24rpx;
+  padding: 16rpx 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12rpx;
+}
+
+.ranking-entry-text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 500;
 }
 
 .transaction-section {
