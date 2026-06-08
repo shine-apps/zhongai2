@@ -59,11 +59,15 @@ function handleGridClick(index: number) {
     '/pages/donation/submit',
     '/pages/market/index',
     '/pages/points/index',
-    '/pages/user/realname',
+    '/pages/ranking/index',
   ]
   const url = routes[index]
+  // Tab pages: activities (0), market (2)
   if (index === 0 || index === 2) {
     uni.switchTab({ url })
+  } else if (index === 4) {
+    // Public page, no login required
+    uni.navigateTo({ url })
   } else if (!isLoggedIn()) {
     uni.navigateTo({ url: '/pages/login/index' })
   } else {
@@ -102,7 +106,7 @@ onPullDownRefresh(async () => {
         <wd-grid-item icon="goods" text="爱心捐助" @click="handleGridClick(1)" />
         <wd-grid-item icon="shop" text="爱心集市" @click="handleGridClick(2)" />
         <wd-grid-item icon="star" text="积分商城" @click="handleGridClick(3)" />
-        <wd-grid-item icon="certificate" text="实名认证" @click="handleGridClick(4)" />
+        <wd-grid-item icon="trophy" text="积分排行" @click="handleGridClick(4)" />
       </wd-grid>
     </view>
 
